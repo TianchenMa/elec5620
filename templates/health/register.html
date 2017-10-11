@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<form action="{% url 'health:user_control' 'register' %}" method="post">
+    {% csrf_token %}
+    User name: <input type="text" name="username"/><br>
+    Password: <input type="password" name="password"/><br>
+    Confirm Password: <input type="password" name="password_confirm"/><br>
+    Register Code: <input type="text" name="register_code"/><br>
+    <input type="submit" name="Submit"/>
+</form>
+
+<a href="{% url 'health:welcome' %}">Index</a>
+</body>
+</html>

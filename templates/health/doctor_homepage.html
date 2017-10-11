@@ -1,0 +1,10 @@
+{% extends 'health/base.html' %}
+
+{% block content %}
+    <h3>Doctor {{ user.username }}'s Homepage</h3>
+    <ul>
+    {% for patient in patients %}
+        <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

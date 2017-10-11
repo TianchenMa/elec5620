@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="user-part">
+    {% if not request.user.id %}
+        <form action="{% url 'health:user_control' 'login' %}" method="post">
+            {% csrf_token %}
+            User name: <input type="text" name="username">
+            Password: <input type="password" name="password">
+            <input type="submit" value="Login">
+        </form>
+        <a href="{% url 'health:user_control' 'register' %}">Signup</a>
+    {% else %}
+        <h6>{{ log_user.username }}</h6>
+        <a href="{% url 'health:operations' 'messages' %}">Messages</a>
+        <form action="{% url 'health:user_control' 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% endif %}
+</div>
+
+<div id="main-part">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<div id="bottom-part">
+    <a href="{% url 'health:welcome' %}">Welcome</a>
+</div>
+</body>
+</html>

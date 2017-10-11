@@ -1,0 +1,28 @@
+{% extends 'health/base.html' %}
+{% block content %}
+    <h4>Tech Team {{ log_user.username }}'s homepage</h4>
+    <ul>
+    <h5>Available codes</h5>
+        {% for code in codes %}
+            <li>Code: {{ code.code }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="{% url 'health:operations' 'create_code' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Create Code</button>
+    </form>
+
+    <h5>Doctors</h5>
+    <ul>
+        {% for doctor in doctors %}
+            <li>Doctor: {{ doctor.username }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="{% url 'health:operations' 'create_doctor_account' %}" method="post">
+        {% csrf_token %}
+        Doctor name: <input type="text" name="doctor_name">
+        <button type="submit">Create doctor account</button>
+    </form>
+{% endblock %}
