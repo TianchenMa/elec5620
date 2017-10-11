@@ -1,0 +1,13 @@
+{% extends 'health/base.html' %}
+
+{% block content %}
+<ul>
+{% for message in messages %}
+    <li>
+    From: {{ message.from_user.username }}<br>
+    Date: {{ message.send_date }}<br>
+    Content:<br>{{ message.content }}<br>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}

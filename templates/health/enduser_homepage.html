@@ -1,0 +1,36 @@
+{% extends 'health/base.html' %}
+
+{% block content %}
+    <h3>EndUser {{ page_owner.username }}'s homepage</h3>
+    {% if doctor == None and self %}
+        <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Select Doctor</button>
+        </form>
+    {% else %}
+        <h5>--Doctor: {{ doctor.username }}--</h5>
+    {% endif %}
+
+    <h5>Health data:</h5>
+    <ul>
+    {% for health_data in health_datas %}
+        <li>
+        Heart rate: {{ health_data.heart_rate }}
+        Weight: {{ health_data.weight }}
+        Temperature: {{ health_data.temperature }}
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% if self %}
+    <h5>Create health data:</h5>
+    <form action="{% url 'health:operations' 'create_health_data' %}" method="post">
+        {% csrf_token %}
+        Heart rate: <input type="text" name="heart_rate"/><br>
+        Weight: <input type="text" name="weight"/><br>
+        Temperature: <input type="text" name="temperature"/><br>
+        <input type="submit" name="Submit"/>
+    </form>
+    {% endif %}
+
+{% endblock %}
