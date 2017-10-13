@@ -102,11 +102,18 @@ class HomepageView(BaseMixin, View):
         return render(self.request, 'health/tech_homepage.html', context)
 
     def doctor_homepage(self, context):
+        context['announcements'] = Announcement.objects.filter(publisher=context['log_user'])
         context['patients'] = User.objects.filter(identity='2', doctor=context['log_user'])
         return render(self.request, 'health/doctor_homepage.html', context)
 
     def enduser_homepage(self, context):
         context['page_owner'] = context['log_user']
+
+        unviewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=False)
+        viewed_announcements = AnnouncementReceive.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=True)
+
+        context['unviewed_announcements'] = unviewed_announcements
+        context['viewed_announcements'] = viewed_announcements
         context['doctor'] = context['log_user'].doctor
         context['health_datas'] = HealthData.objects.filter(creator=context['log_user'])
         return render(self.request, 'health/enduser_homepage.html', context)
@@ -143,12 +150,14 @@ class OperationView(BaseMixin, View):
             return self.create_doctor_account(context)
         elif slug == 'choose_doctor':
             return self.choose_doctor(context)
+        elif slug == 'publish_announcement':
+            return self.publish_announcement(context)
         else:
             raise Http404
 
     def create_code(self, context):
         if context['identity'] != '0':
-            return HttpResponseNotAllowed()
+            return
 
         code_content = generate_register_code(context['log_user'])
         code = RegisterCode.objects.create(code=code_content, creator=context['log_user'])
@@ -179,7 +188,7 @@ class OperationView(BaseMixin, View):
 
     def create_doctor_account(self, context):
         if context['identity'] != '0':
-            return HttpResponseNotAllowed()
+            return
 
         doctor_name = self.request.POST['doctor_name']
         doctor, password = generate_doctor(doctor_name)
@@ -190,7 +199,7 @@ class OperationView(BaseMixin, View):
             return HttpResponseServerError()
 
         message = Message.objects.create(from_user=context['log_user'], to_user=context['log_user'])
-        message.content = 'Doctor username: ' + doctor_name + '\n' + 'Password: ' + password
+        message.content = 'Doctor username: ' + doctor_name + '<br>' + 'Password: ' + password
 
         try:
             message.save()
@@ -201,6 +210,9 @@ class OperationView(BaseMixin, View):
         return HttpResponseRedirect(reverse('health:homepage'))
 
     def choose_doctor(self, context):
+        if context['identity'] != '2':
+            return
+
         context['doctor'] = context['log_user'].doctor
         doctor = random_doctor(context['doctor'])
         user = context['log_user']
@@ -210,6 +222,26 @@ class OperationView(BaseMixin, View):
             user.save()
         except Exception:
             return HttpResponseServerError()
+
+        return HttpResponseRedirect(reverse('health:homepage'))
+
+    def publish_announcement(self, context):
+        if context['identity'] != '1':
+            return
+
+        content = self.request.POST['content']
+        announcement = Announcement.objects.create(publisher=context['log_user'], content=content)
+        announcement.save()
+
+        users = User.objects.filter(identity='2', doctor=context['log_user'])
+
+        for user in users:
+            announcement_receive = AnnouncementReceive.objects.create(announcement=announcement, enduser=user)
+
+            try:
+                announcement_receive.save()
+            except Exception:
+                pass
 
         return HttpResponseRedirect(reverse('health:homepage'))
 
@@ -317,3 +349,4 @@ class DoctorOperationView(BaseMixin, View):
     @method_decorator(login_required)
     def post(self):
         slug = self.kwargs.get('slug')
+
