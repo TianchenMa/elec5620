@@ -2,6 +2,22 @@
 
 {% block content %}
     <h3>Doctor {{ user.username }}'s Homepage</h3>
+    <h5>Announcements</h5>
+    <ul>
+    {% for annoucement in announcements %}
+        <li>
+            Announcement: {{ annoucement.content }}<br>
+            Publish date: {{ annoucement.send_date }}<br>
+        </li>
+    {% endfor %}
+    </ul>
+    <h6>Publish Announcement</h6>
+    <form action="{% url 'health:operations' 'publish_announcement'%}" method="post">
+        {% csrf_token %}
+        Content: <input type="text" name="content">
+        <button type="submit">Publish</button>
+    </form>
+    <h5>Patient List</h5>
     <ul>
     {% for patient in patients %}
         <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>

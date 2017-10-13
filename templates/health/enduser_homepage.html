@@ -21,7 +21,6 @@
         </li>
     {% endfor %}
     </ul>
-
     {% if self %}
     <h5>Create health data:</h5>
     <form action="{% url 'health:operations' 'create_health_data' %}" method="post">
@@ -31,6 +30,19 @@
         Temperature: <input type="text" name="temperature"/><br>
         <input type="submit" name="Submit"/>
     </form>
+    {% endif %}
+
+    {% if self %}
+        <h5>Announcements:</h5>
+        <h6>New</h6>
+        <ul>
+        {% for new in unviewed_announcements %}
+            <li>
+            Content: {{ new.content }}<br>
+            Publish Date: {{ new.send_date }}
+            </li>
+        {% endfor %}
+        </ul>
     {% endif %}
 
 {% endblock %}
