@@ -80,3 +80,31 @@ class Message(models.Model):
             self.send_date = timezone.now()
 
         return super(Message, self).save(*args, **kwargs)
+
+
+class Announcement(models.Model):
+    publisher = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='publisher'
+    )
+
+    receivers = models.ManyToManyField(
+        User,
+        through='AnnouncementReceive'
+    )
+
+    content = models.CharField(max_length=200, null=True)
+    send_date = models.DateTimeField('send date.')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.send_date = timezone.now()
+
+        return super(Announcement, self).save(*args, **kwargs)
+
+
+class AnnouncementReceive(models.Model):
+    announcement = models.ForeignKey(Announcement)
+    enduser = models.ForeignKey(User)
+    viewed = models.BooleanField(default=False)
