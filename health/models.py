@@ -57,6 +57,9 @@ class HealthData(models.Model):
 
         return super(HealthData, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-sub_date']
+
 
 class Message(models.Model):
     from_user = models.ForeignKey(
@@ -81,6 +84,9 @@ class Message(models.Model):
 
         return super(Message, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-send_date']
+
 
 class Announcement(models.Model):
     publisher = models.ForeignKey(
@@ -102,6 +108,9 @@ class Announcement(models.Model):
             self.send_date = timezone.now()
 
         return super(Announcement, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-send_date']
 
 
 class AnnouncementReceive(models.Model):
@@ -129,3 +138,6 @@ class Task(models.Model):
             self.send_date = timezone.now()
 
         return super(Task, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-send_date']
