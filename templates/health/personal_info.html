@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'health/base.html' %}
+
+{% block content %}
+    <form action="{% url 'health:operations' 'modify_info' %}" method="post">
+    {% csrf_token %}
+    New password: <input type="text" name="password"/><br>
+    Password confirm: <input type="text" name="password_confirm"/><br>
+    <button type="submit">Confirm</button>
+    </form>
+{% endblock %}
