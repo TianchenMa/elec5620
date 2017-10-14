@@ -45,4 +45,22 @@
         </ul>
     {% endif %}
 
+    <h5>Tasks:</h5>
+    <ul>
+    {% for task in tasks %}
+        <li>
+        Content: {{ task.content }}<br>
+        Publish Date: {{ task.send_date }}
+        </li>
+    {% endfor %}
+    </ul>
+    {% if not self %}
+        <h5>Create Task</h5>
+        <form action="{% url 'health:doctor_operations' page_owner.id 'create_task' %}" method="post">
+        {% csrf_token %}
+        Task content:<input type="text" name="content"/>
+        <button type="submit">Create</button>
+        </form>
+    {% endif %}
+
 {% endblock %}

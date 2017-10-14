@@ -116,6 +116,7 @@ class HomepageView(BaseMixin, View):
         context['viewed_announcements'] = viewed_announcements
         context['doctor'] = context['log_user'].doctor
         context['health_datas'] = HealthData.objects.filter(creator=context['log_user'])
+        context['tasks'] = Task.objects.filter(user=context['log_user'])
         return render(self.request, 'health/enduser_homepage.html', context)
 
 
@@ -331,6 +332,7 @@ class PatientHomepageView(BaseMixin, TemplateView):
         context['page_owner'] = page_owner
         context['self'] = False
         context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user=context['page_owner'])
 
         return context
 
@@ -339,6 +341,12 @@ class PatientHomepageView(BaseMixin, TemplateView):
 class DoctorOperationView(BaseMixin, View):
     def get_context_data(self, **kwargs):
         context = super(DoctorOperationView, self).get_context_data(**kwargs)
+        patient_id = self.kwargs.get('user_id')
+        page_owner = User.objects.get(pk=patient_id)
+        context['page_owner'] = page_owner
+        context['self'] = False
+        context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user=context['page_owner'])
 
         return context
 
@@ -347,6 +355,22 @@ class DoctorOperationView(BaseMixin, View):
         slug = self.kwargs.get('slug')
 
     @method_decorator(login_required)
-    def post(self):
+    def post(self, *args, **kwargs):
         slug = self.kwargs.get('slug')
 
+        if slug == 'create_task':
+            return self.create_task()
+        else:
+            raise Http404
+
+    def create_task(self):
+        context = self.get_context_data()
+
+        content = self.request.POST['content']
+        task = Task.objects.create(doctor=context['log_user'], user=context['page_owner'], content=content)
+        try:
+            task.save()
+        except Exception:
+            pass
+
+        return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
