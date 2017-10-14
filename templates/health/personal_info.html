@@ -1,0 +1,10 @@
+{% extends 'health/base.html' %}
+
+{% block content %}
+    <form action="{% url 'health:operations' 'modify_info' %}" method="post">
+    {% csrf_token %}
+    New password: <input type="text" name="password"/><br>
+    Password confirm: <input type="text" name="password_confirm"/><br>
+    <button type="submit">Confirm</button>
+    </form>
+{% endblock %}

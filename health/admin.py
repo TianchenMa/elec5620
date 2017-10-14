@@ -66,9 +66,21 @@ class AnnouncementReceiveAdmin(admin.ModelAdmin):
     list_display = ['announcement', 'enduser', 'viewed']
 
 
+class TaskAdmin(admin.ModelAdmin):
+    fields = [
+        'doctor',
+        'user',
+        'content',
+        'send_date'
+    ]
+
+    list_display = ['doctor', 'user', 'content', 'send_date']
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(RegisterCode, RegisterCodeAdmin)
 admin.site.register(HealthData, HealthDataAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Announcement, AnnouncementAdmin)
 admin.site.register(AnnouncementReceive, AnnouncementReceiveAdmin)
+admin.site.register(Task, TaskAdmin)

@@ -16,7 +16,7 @@
         </form>
         <a href="{% url 'health:user_control' 'register' %}">Signup</a>
     {% else %}
-        <h6>{{ log_user.username }}</h6>
+        <h6><a href="{% url 'health:operations' 'modify_info'%}">{{ log_user.username }}</a></h6>
         <a href="{% url 'health:operations' 'messages' %}">Messages</a>
         <form action="{% url 'health:user_control' 'logout' %}" method="post">
             {% csrf_token %}
@@ -31,7 +31,7 @@
 </div>
 
 <div id="bottom-part">
-    <a href="{% url 'health:welcome' %}">Welcome</a>
+    <a href="{% url 'health:homepage' %}">Welcome</a>
 </div>
 </body>
 </html>

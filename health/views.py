@@ -116,6 +116,7 @@ class HomepageView(BaseMixin, View):
         context['viewed_announcements'] = viewed_announcements
         context['doctor'] = context['log_user'].doctor
         context['health_datas'] = HealthData.objects.filter(creator=context['log_user'])
+        context['tasks'] = Task.objects.filter(user=context['log_user'])
         return render(self.request, 'health/enduser_homepage.html', context)
 
 
@@ -134,6 +135,8 @@ class OperationView(BaseMixin, View):
         if slug == 'messages':
             context['messages'] = Message.objects.filter(to_user=context['log_user'])
             return render(self.request, 'health/messages.html', context)
+        elif slug == 'modify_info':
+            return render(self.request, 'health/personal_info.html', context)
         else:
             raise Http404
 
@@ -152,6 +155,10 @@ class OperationView(BaseMixin, View):
             return self.choose_doctor(context)
         elif slug == 'publish_announcement':
             return self.publish_announcement(context)
+        elif slug == 'delete_announcement':
+            return self.delete_announcement(context)
+        elif slug == 'modify_info':
+            return self.modify_info(context)
         else:
             raise Http404
 
@@ -245,6 +252,41 @@ class OperationView(BaseMixin, View):
 
         return HttpResponseRedirect(reverse('health:homepage'))
 
+    def delete_announcement(self, context):
+        if context['identity'] != '1':
+            return
+
+        announcement_id = self.request.POST['announcement_id']
+        announcement = Announcement.objects.get(pk=announcement_id)
+
+        try:
+            announcement.delete()
+        except Exception:
+            pass
+
+        return HttpResponseRedirect(reverse('health:homepage'))
+
+    def modify_info(self, context):
+        password = self.request.POST['password']
+        password_confirm = self.request.POST['password_confirm']
+
+        if password == password_confirm:
+            user = context['log_user']
+            user.set_password(password)
+
+            try:
+                user.save()
+            except Exception:
+                pass
+
+            user = authenticate(username=user.username, password=password)
+
+            if user is not None:
+                self.request.session.set_expiry(0)
+                login(self.request, user)
+
+        return HttpResponseRedirect(reverse('health:homepage'))
+
 
 # URL name = 'user_control'
 class UserControlView(BaseMixin, View):
@@ -331,6 +373,7 @@ class PatientHomepageView(BaseMixin, TemplateView):
         context['page_owner'] = page_owner
         context['self'] = False
         context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user=context['page_owner'])
 
         return context
 
@@ -339,6 +382,12 @@ class PatientHomepageView(BaseMixin, TemplateView):
 class DoctorOperationView(BaseMixin, View):
     def get_context_data(self, **kwargs):
         context = super(DoctorOperationView, self).get_context_data(**kwargs)
+        patient_id = self.kwargs.get('user_id')
+        page_owner = User.objects.get(pk=patient_id)
+        context['page_owner'] = page_owner
+        context['self'] = False
+        context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user=context['page_owner'])
 
         return context
 
@@ -347,6 +396,36 @@ class DoctorOperationView(BaseMixin, View):
         slug = self.kwargs.get('slug')
 
     @method_decorator(login_required)
-    def post(self):
+    def post(self, *args, **kwargs):
         slug = self.kwargs.get('slug')
 
+        if slug == 'create_task':
+            return self.create_task()
+        elif slug == 'delete_task':
+            return self.delete_task()
+        else:
+            raise Http404
+
+    def create_task(self):
+        context = self.get_context_data()
+        content = self.request.POST['content']
+        task = Task.objects.create(doctor=context['log_user'], user=context['page_owner'], content=content)
+
+        try:
+            task.save()
+        except Exception:
+            pass
+
+        return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
+
+    def delete_task(self):
+        context = self.get_context_data()
+        task_id = self.request.POST['task_id']
+        task = Task.objects.get(pk=task_id)
+
+        try:
+            task.delete()
+        except Exception:
+            pass
+
+        return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
