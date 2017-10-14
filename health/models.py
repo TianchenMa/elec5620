@@ -108,3 +108,24 @@ class AnnouncementReceive(models.Model):
     announcement = models.ForeignKey(Announcement)
     enduser = models.ForeignKey(User)
     viewed = models.BooleanField(default=False)
+
+
+class Task(models.Model):
+    doctor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='task_creator'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='task_receiver'
+    )
+    content = models.CharField(max_length=500, null=False)
+    send_date = models.DateTimeField('send date.')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.send_date = timezone.now()
+
+        return super(Task, self).save(*args, **kwargs)
