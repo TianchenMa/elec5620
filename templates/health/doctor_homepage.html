@@ -4,13 +4,19 @@
     <h3>Doctor {{ user.username }}'s Homepage</h3>
     <h5>Announcements</h5>
     <ul>
-    {% for annoucement in announcements %}
+    {% for announcement in announcements %}
         <li>
-            Announcement: {{ annoucement.content }}<br>
-            Publish date: {{ annoucement.send_date }}<br>
+            Announcement: {{ announcement.content }}<br>
+            Publish date: {{ announcement.send_date }}<br>
         </li>
+        <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
+        {% csrf_token %}
+            <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
+            <button type="submit">Delete</button>
+        </form>
     {% endfor %}
     </ul>
+
     <h6>Publish Announcement</h6>
     <form action="{% url 'health:operations' 'publish_announcement'%}" method="post">
         {% csrf_token %}
