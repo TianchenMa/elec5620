@@ -32,18 +32,18 @@
     </form>
     {% endif %}
 
-    {% if self %}
-        <h5>Announcements:</h5>
-        <h6>New</h6>
-        <ul>
-        {% for new in unviewed_announcements %}
-            <li>
-            Content: {{ new.content }}<br>
-            Publish Date: {{ new.send_date }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+
+    <h5>Announcements:</h5>
+    <h6>New</h6>
+    <ul>
+    {% for new in unviewed_announcements %}
+        <li>
+        Content: {{ new.content }}<br>
+        Publish Date: {{ new.send_date }}
+        </li>
+    {% endfor %}
+    </ul>
+
 
     <h5>Tasks:</h5>
     <ul>
@@ -52,8 +52,14 @@
         Content: {{ task.content }}<br>
         Publish Date: {{ task.send_date }}
         </li>
+        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
+        {% csrf_token %}
+            <input type="hidden" name="task_id" value="{{ task.id }}"/>
+            <button type="submit">Delete</button>
+        </form>
     {% endfor %}
     </ul>
+
     {% if not self %}
         <h5>Create Task</h5>
         <form action="{% url 'health:doctor_operations' page_owner.id 'create_task' %}" method="post">
