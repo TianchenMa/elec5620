@@ -141,3 +141,17 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-send_date']
+
+
+class Activity(models.Model):
+    title = models.CharField(max_length=100, null=True)
+    content = models.CharField(max_length=300, null=False)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='activity_creator'
+    )
+    activity_time = models.DateTimeField('Activity time.')
+
+    class Meta:
+        ordering = ['activity_time']

@@ -77,6 +77,17 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ['doctor', 'user', 'content', 'send_date']
 
 
+class ActivityAdmin(admin.ModelAdmin):
+    fields = [
+        'user',
+        'title',
+        'content',
+        'activity_time'
+    ]
+
+    list_display = ['user', 'title', 'content', 'activity_time']
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(RegisterCode, RegisterCodeAdmin)
 admin.site.register(HealthData, HealthDataAdmin)
@@ -84,3 +95,4 @@ admin.site.register(Message, MessageAdmin)
 admin.site.register(Announcement, AnnouncementAdmin)
 admin.site.register(AnnouncementReceive, AnnouncementReceiveAdmin)
 admin.site.register(Task, TaskAdmin)
+admin.site.register(Activity, ActivityAdmin)
