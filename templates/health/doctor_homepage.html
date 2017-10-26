@@ -2,6 +2,33 @@
 
 {% block content %}
     <h3>Doctor {{ user.username }}'s Homepage</h3>
+
+    <div id="activity">
+    <h5>Activities:</h5>
+        <ul>
+            {% for activity in activities %}
+                <li>
+                    Time: {{ activity.activity_time }}<br>
+                    Title: {{ activity.title }}<br>
+                    Content: {{ activity.content }}<br>
+                </li>
+
+                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                    <button type="submit">Delete</button>
+                </form>
+            {% endfor %}
+        </ul>
+    <form action="{% url 'health:operations' 'create_activity' %}" method="post">
+        {% csrf_token %}
+        Datetime: <input type="datetime-local" name="time"><br>
+        Title: <input type="text" name="title"><br>
+        Content: <input type="text" name="content"><br>
+        <button type="submit">Create</button>
+    </form>
+    </div>
+
     <h5>Announcements</h5>
     <ul>
     {% for announcement in announcements %}
