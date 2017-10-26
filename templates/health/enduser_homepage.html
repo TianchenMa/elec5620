@@ -11,6 +11,33 @@
         <h5>--Doctor: {{ doctor.username }}--</h5>
     {% endif %}
 
+    <div id="activity">
+    <h5>Activities:</h5>
+        <ul>
+            {% for activity in activities %}
+                <li>
+                    Time: {{ activity.activity_time }}<br>
+                    Title: {{ activity.title }}<br>
+                    Content: {{ activity.content }}<br>
+                </li>
+                {% if self %}
+                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                    <button type="submit">Delete</button>
+                </form>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    <form action="{% url 'health:operations' 'create_activity' %}" method="post">
+        {% csrf_token %}
+        Datetime: <input type="datetime-local" name="time"><br>
+        Title: <input type="text" name="title"><br>
+        Content: <input type="text" name="content"><br>
+        <button type="submit">Create</button>
+    </form>
+    </div>
+
     <h5>Health data:</h5>
     <ul>
     {% for health_data in health_datas %}
@@ -52,11 +79,13 @@
         Content: {{ task.content }}<br>
         Publish Date: {{ task.send_date }}
         </li>
+        {% if not self %}
         <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
         {% csrf_token %}
             <input type="hidden" name="task_id" value="{{ task.id }}"/>
             <button type="submit">Delete</button>
         </form>
+        {% endif %}
     {% endfor %}
     </ul>
 

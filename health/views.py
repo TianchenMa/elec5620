@@ -1,12 +1,14 @@
 import random
 import hashlib
 import string
+import datetime
 
 from django.db.models.aggregates import Count
-from django.db.models import F, Q
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponseRedirect, Http404, HttpResponseNotAllowed, HttpResponseServerError
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect, Http404, HttpResponseServerError
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import ContextMixin
@@ -15,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .models import *
+
+TIME_FORMAT = '%Y-%m-%dT%H:%M'
 
 
 def generate_register_code(user):
@@ -71,6 +75,9 @@ class WelcomeView(BaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(WelcomeView, self).get_context_data(**kwargs)
 
+        # if context['log_user'].is_active:
+        #     return HttpResponseRedirect(reverse('health:homepage'))
+
         return context
 
 
@@ -99,24 +106,29 @@ class HomepageView(BaseMixin, View):
     def tech_homepage(self, context):
         context['doctors'] = User.objects.filter(identity='1')
         context['codes'] = RegisterCode.objects.filter(creator=context['log_user'], used=False)
+
         return render(self.request, 'health/tech_homepage.html', context)
 
     def doctor_homepage(self, context):
+        now = datetime.datetime.now().strftime(TIME_FORMAT)
+        context['activities'] = Activity.objects.filter(user=context['log_user'], activity_time__gt=now)
         context['announcements'] = Announcement.objects.filter(publisher=context['log_user'])
         context['patients'] = User.objects.filter(identity='2', doctor=context['log_user'])
+
         return render(self.request, 'health/doctor_homepage.html', context)
 
     def enduser_homepage(self, context):
         context['page_owner'] = context['log_user']
-
         unviewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=False)
-        viewed_announcements = AnnouncementReceive.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=True)
-
+        viewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=True)
+        now = datetime.datetime.now().strftime(TIME_FORMAT)
+        context['activities'] = Activity.objects.filter(user=context['log_user'], activity_time__gt=now)
         context['unviewed_announcements'] = unviewed_announcements
         context['viewed_announcements'] = viewed_announcements
         context['doctor'] = context['log_user'].doctor
         context['health_datas'] = HealthData.objects.filter(creator=context['log_user'])
         context['tasks'] = Task.objects.filter(user=context['log_user'])
+
         return render(self.request, 'health/enduser_homepage.html', context)
 
 
@@ -159,12 +171,16 @@ class OperationView(BaseMixin, View):
             return self.delete_announcement(context)
         elif slug == 'modify_info':
             return self.modify_info(context)
+        elif slug == 'create_activity':
+            return self.create_activity()
+        elif slug == 'delete_activity':
+            return self.delete_activity()
         else:
             raise Http404
 
     def create_code(self, context):
         if context['identity'] != '0':
-            return
+            return PermissionDenied
 
         code_content = generate_register_code(context['log_user'])
         code = RegisterCode.objects.create(code=code_content, creator=context['log_user'])
@@ -195,7 +211,7 @@ class OperationView(BaseMixin, View):
 
     def create_doctor_account(self, context):
         if context['identity'] != '0':
-            return
+            return PermissionDenied
 
         doctor_name = self.request.POST['doctor_name']
         doctor, password = generate_doctor(doctor_name)
@@ -218,7 +234,7 @@ class OperationView(BaseMixin, View):
 
     def choose_doctor(self, context):
         if context['identity'] != '2':
-            return
+            return PermissionDenied
 
         context['doctor'] = context['log_user'].doctor
         doctor = random_doctor(context['doctor'])
@@ -234,7 +250,7 @@ class OperationView(BaseMixin, View):
 
     def publish_announcement(self, context):
         if context['identity'] != '1':
-            return
+            return PermissionDenied
 
         content = self.request.POST['content']
         announcement = Announcement.objects.create(publisher=context['log_user'], content=content)
@@ -254,7 +270,7 @@ class OperationView(BaseMixin, View):
 
     def delete_announcement(self, context):
         if context['identity'] != '1':
-            return
+            return PermissionDenied
 
         announcement_id = self.request.POST['announcement_id']
         announcement = Announcement.objects.get(pk=announcement_id)
@@ -284,6 +300,40 @@ class OperationView(BaseMixin, View):
             if user is not None:
                 self.request.session.set_expiry(0)
                 login(self.request, user)
+
+        return HttpResponseRedirect(reverse('health:homepage'))
+
+    def create_activity(self):
+        context = self.get_context_data()
+        now = datetime.datetime.now()
+        activity_time = self.request.POST['time']
+        activity_time = datetime.datetime.strptime(activity_time, TIME_FORMAT)
+        if activity_time < now:
+            return HttpResponseRedirect(reverse('health:homepage'))
+
+        activity_form = ActivityForm(self.request.POST)
+
+        if activity_form.is_valid():
+            title = activity_form.cleaned_data['title']
+            content = activity_form.cleaned_data['content']
+
+            activity = Activity.objects.create(title=title, content=content, user=context['log_user'], activity_time=activity_time)
+
+            try:
+                activity.save()
+            except Exception:
+                pass
+
+        return HttpResponseRedirect(reverse('health:homepage'))
+
+    def delete_activity(self):
+        activity_id = self.request.POST['activity_id']
+        activity = Activity.objects.get(pk=activity_id)
+
+        try:
+            activity.delete()
+        except Exception:
+            pass
 
         return HttpResponseRedirect(reverse('health:homepage'))
 
