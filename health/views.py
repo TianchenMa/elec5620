@@ -123,6 +123,7 @@ class HomepageView(BaseMixin, View):
         viewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=True)
         now = datetime.datetime.now().strftime(TIME_FORMAT)
         context['activities'] = Activity.objects.filter(user=context['log_user'], activity_time__gt=now)
+        context['past_activities'] = Activity.objects.filter(user=context['log_user'], activity_time__lt=now)
         context['unviewed_announcements'] = unviewed_announcements
         context['viewed_announcements'] = viewed_announcements
         context['doctor'] = context['log_user'].doctor

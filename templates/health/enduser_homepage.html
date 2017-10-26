@@ -13,6 +13,7 @@
 
     <div id="activity">
     <h5>Activities:</h5>
+        <h6>Comming activities:</h6>
         <ul>
             {% for activity in activities %}
                 <li>
@@ -29,13 +30,29 @@
                 {% endif %}
             {% endfor %}
         </ul>
-    <form action="{% url 'health:operations' 'create_activity' %}" method="post">
-        {% csrf_token %}
-        Datetime: <input type="datetime-local" name="time"><br>
-        Title: <input type="text" name="title"><br>
-        Content: <input type="text" name="content"><br>
-        <button type="submit">Create</button>
-    </form>
+        <h6>Past activities</h6>
+            {% for activity in past_activities %}
+                <li>
+                    Time: {{ activity.activity_time }}<br>
+                    Title: {{ activity.title }}<br>
+                    Content: {{ activity.content }}<br>
+                </li>
+                {% if self %}
+                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                    <button type="submit">Delete</button>
+                </form>
+                {% endif %}
+            {% endfor %}
+        <br>
+        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
+            {% csrf_token %}
+            Datetime: <input type="datetime-local" name="time"><br>
+            Title: <input type="text" name="title"><br>
+            Content: <input type="text" name="content"><br>
+            <button type="submit">Create</button>
+        </form>
     </div>
 
     <h5>Health data:</h5>
