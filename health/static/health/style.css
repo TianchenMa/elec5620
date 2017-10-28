@@ -1,6 +1,6 @@
 body{
     background: white url("images/WP.png");
-    padding-top: 70px;
+    padding-top: 67px;
 }
 
 .navbar-inverse .navbar-brand{
@@ -45,6 +45,14 @@ body{
 
 .panel{
     margin-bottom: 16px;
+}
+
+.panel-body{
+    padding: 12px;
+}
+
+.table{
+    margin-bottom: 5px;
 }
 
 .slogan{

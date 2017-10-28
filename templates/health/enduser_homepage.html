@@ -3,7 +3,9 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
+            <!--COL-ONE-->
             <div class="col-sm-12 col-md-4 box">
+                <!--HEALTHDATA-->
                 <div class="panel panel-left">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="FIVE DAYS HEALTH DATA">FIVE DAYS HEALTH DATA&nbsp;</h3>
@@ -44,6 +46,7 @@
                         {% endif %}
                     </div>
                 </div>
+                <!--TASK-->
                 <div class="panel panel-left">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="DOCTOR RECOMMENDATION TASK">DOCTOR RECOMMENDATION TASK&nbsp;</h3>
@@ -63,7 +66,7 @@
                                 </thead>
                                 <tbody>
                                     {% for task in tasks %}
-                                        {% if forloop.counter < 3%}
+                                        {% if forloop.counter < 4%}
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ task.content}}</td>
@@ -83,13 +86,19 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <form action="{% url 'health:healthdata_page' page_owner.id%}">
+{#                                {% csrf_token %}#}
+                                <button class="btn btn-success col-md-offset-3 col-md-5">MORE</button>
+                            </form>
                         {% else %}
                             <h3>You don't have any data</h3>
                         {% endif %}
                     </div>
                 </div>
             </div>
+            <!--COL-TWO-->
             <div class="col-sm-12 col-md-6 box">
+                <!--CHART-->
                 <div class="panel panel-right">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="TRACK HEALTH DATA">TRACK HEALTH DATA&nbsp;</h3>
@@ -100,6 +109,7 @@
                         {% endif %}
                     </div>
                 </div>
+                <!--HEALTHSTATUS-->
                 <div class="panel panel-right">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="HEALTH STATUS">HEALTH STATUS&nbsp;</h3>
@@ -152,8 +162,10 @@
                     </div>
                 </div>
             </div>
+            <!--COL-THREE-->
             {% if self %}
                 <div class="col-sm-12 col-md-2 box">
+                    <!--DOCTOR-->
                     <div class="panel panel-last">
                         <div class="panel-heading">
                             <h3 class="panel-title"data-text="YOUR DOCTOR">YOUR DOCTOR&nbsp;</h3>
@@ -169,6 +181,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    <!--NOTIFICATION-->
                     <div class="panel panel-last">
                         <div class="panel-heading">
                             <h3 class="panel-title"data-text="NOTIFICATION">NOTIFICATION&nbsp;</h3>
@@ -190,6 +203,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    <!--ACTIVITY-->
                     <div class="panel panel-last">
                         <div class="panel-heading">
                             <h3 class="panel-title"data-text="ACTIVITY">ACTIVITY&nbsp;</h3>
@@ -279,6 +293,13 @@ var myChart = new Chart(ctx, {
 
 
 
+
+
+
+
+
+
+
 {#    <h3>EndUser {{ page_owner.username }}'s homepage</h3>#}
 {#    {% if doctor == None and self %}#}
 {#        <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">#}
@@ -289,49 +310,49 @@ var myChart = new Chart(ctx, {
 {#        <h5>--Doctor: {{ doctor.username }}--</h5>#}
 {#    {% endif %}#}
 
-    <div id="activity">
-    <h5>Activities:</h5>
-        <h6>Comming activities:</h6>
-        <ul>
-            {% for activity in activities %}
-                <li>
-                    Time: {{ activity.activity_time }}<br>
-                    Title: {{ activity.title }}<br>
-                    Content: {{ activity.content }}<br>
-                </li>
-                {% if self %}
-                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
-                    <button type="submit">Delete</button>
-                </form>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <h6>Past activities</h6>
-            {% for activity in past_activities %}
-                <li>
-                    Time: {{ activity.activity_time }}<br>
-                    Title: {{ activity.title }}<br>
-                    Content: {{ activity.content }}<br>
-                </li>
-                {% if self %}
-                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
-                    <button type="submit">Delete</button>
-                </form>
-                {% endif %}
-            {% endfor %}
-        <br>
-        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
-            {% csrf_token %}
-            Datetime: <input type="datetime-local" name="time"><br>
-            Title: <input type="text" name="title"><br>
-            Content: <input type="text" name="content"><br>
-            <button type="submit">Create</button>
-        </form>
-    </div>
+{#    <div id="activity">#}
+{#    <h5>Activities:</h5>#}
+{#        <h6>Comming activities:</h6>#}
+{#        <ul>#}
+{#            {% for activity in activities %}#}
+{#                <li>#}
+{#                    Time: {{ activity.activity_time }}<br>#}
+{#                    Title: {{ activity.title }}<br>#}
+{#                    Content: {{ activity.content }}<br>#}
+{#                </li>#}
+{#                {% if self %}#}
+{#                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>#}
+{#                    <button type="submit">Delete</button>#}
+{#                </form>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        <h6>Past activities</h6>#}
+{#            {% for activity in past_activities %}#}
+{#                <li>#}
+{#                    Time: {{ activity.activity_time }}<br>#}
+{#                    Title: {{ activity.title }}<br>#}
+{#                    Content: {{ activity.content }}<br>#}
+{#                </li>#}
+{#                {% if self %}#}
+{#                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>#}
+{#                    <button type="submit">Delete</button>#}
+{#                </form>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        <br>#}
+{#        <form action="{% url 'health:operations' 'create_activity' %}" method="post">#}
+{#            {% csrf_token %}#}
+{#            Datetime: <input type="datetime-local" name="time"><br>#}
+{#            Title: <input type="text" name="title"><br>#}
+{#            Content: <input type="text" name="content"><br>#}
+{#            <button type="submit">Create</button>#}
+{#        </form>#}
+{#    </div>#}
 
 {#    <h5>Health data:</h5>#}
 {#    <ul>#}
@@ -355,34 +376,34 @@ var myChart = new Chart(ctx, {
 {#    {% endif %}#}
 
 
-    <h5>Announcements:</h5>
-    <h6>New</h6>
-    <ul>
-    {% for new in unviewed_announcements %}
-        <li>
-        Content: {{ new.content }}<br>
-        Publish Date: {{ new.send_date }}
-        </li>
-    {% endfor %}
-    </ul>
+{#    <h5>Announcements:</h5>#}
+{#    <h6>New</h6>#}
+{#    <ul>#}
+{#    {% for new in unviewed_announcements %}#}
+{#        <li>#}
+{#        Content: {{ new.content }}<br>#}
+{#        Publish Date: {{ new.send_date }}#}
+{#        </li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
 
 
-    <h5>Tasks:</h5>
-    <ul>
-    {% for task in tasks %}
-        <li>
-        Content: {{ task.content }}<br>
-        Publish Date: {{ task.send_date }}
-        </li>
-        {% if not self %}
-        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
-        {% csrf_token %}
-            <input type="hidden" name="task_id" value="{{ task.id }}"/>
-            <button type="submit">Delete</button>
-        </form>
-        {% endif %}
-    {% endfor %}
-    </ul>
+{#    <h5>Tasks:</h5>#}
+{#    <ul>#}
+{#    {% for task in tasks %}#}
+{#        <li>#}
+{#        Content: {{ task.content }}<br>#}
+{#        Publish Date: {{ task.send_date }}#}
+{#        </li>#}
+{#        {% if not self %}#}
+{#        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">#}
+{#        {% csrf_token %}#}
+{#            <input type="hidden" name="task_id" value="{{ task.id }}"/>#}
+{#            <button type="submit">Delete</button>#}
+{#        </form>#}
+{#        {% endif %}#}
+{#    {% endfor %}#}
+{#    </ul>#}
 
     {% if not self %}
         <h5>Create Task</h5>
