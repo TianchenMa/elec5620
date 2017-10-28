@@ -2,26 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>HCA::{% block title%}LOGIN{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Baloo Bhaina">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Carter One">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Damion">
+    <link rel="stylesheet" type="text/css" href="{% static 'health/style.css' %}"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
 </head>
 <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img class="navbar-brand" src="https://s25.postimg.org/3wzkgvo6n/ELSE_52.png">
+                <a class="navbar-brand" href="{% url 'health:homepage' %}" data-text="HC AIDE">HC AIDE&nbsp;</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="topNavBar">
+                {% if request.user.id %}
+                    <ul class="nav navbar-nav">
+                    <li class="">
+                        <a href="{% url 'health:homepage' %}">
+                            <div class="ssolutionn"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>&nbsp DASHBOARD</div>
+                        </a>
+                    </li>
+                    <script>
+                        console.log({{ identity }});
+                    </script>
+                    {% if  not identity  == '1' %}
+                        <li>
+                            <a href="{% url 'health:healthdata_page' request.user.id %}">
+                                <div class="ssolutionn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp  HEALTH DATA</div>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <a href="#">
+                            <div class="ssolutionn"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>&nbsp; TASK</div>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <div class="ssolutionn"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>&nbsp; CALENDAR</div>
+                        </a>
+                    </li>
+                </ul>
+                {% else %}
+                    <ul class="nav navbar-nav slogan" data-text="★ Your Personal Health Carer ★">
+                            ★ Your Personal Health Carer ★ &nbsp;
+                    </ul>
+                {% endif %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                        {% if request.user.id %}
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true"><div class="ssolutionn" id="settt"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; {{ log_user.username }}</div></a>
+                            <ul class="dropdown-menu" role="menu">
+                            <li class="">
+                                <a href="#" onclick="document.forms['logoutForm'].submit(); return false;">
+                                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp; Logout
+                                </a>
+                                <form name="logoutForm" action="{% url 'health:user_control' 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                </form>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="">
+                                <a href="{% url 'health:operations' 'messages' %}">
+                                    <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>&nbsp; Notifications
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="">
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp; Emergency Center
+                                </a>
+                            </li>
+                        </ul>
+                        {% else %}
+                            <a href="{% url 'health:user_control' 'register' %}" aria-expanded="true"><div class="ssolutionn" id="settt"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; SIGN UP</div></a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="user-part" class="container-fluid">
+        {% if not request.user.id %}
+            <div class="row">
+            <div class="col-sm-12 col-md-offset-2 col-md-8">
+                <div class="panel panel-right panel-login">
+                    <div class="panel-heading">
+{#                        style="text-align: center"#}
+                        <h3 class="panel-title col-md-offset-5"data-text="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGIN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGIN&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" enctype="multipart/form-data" action="{% url 'health:user_control' 'login' %}" method="post">
+                            {% csrf_token %}
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="col-md-offset-4 col-md-4 login-form">
+                                <div>Username: <input type="text" name="username"></div><br>
+                                <div>Password: &nbsp;<input type="password" name="password"></div><br>
+                                <button type="submit" class="btn btn-success col-md-offset-4 col-md-4">LOGIN</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
 <div id="user-part">
     {% if not request.user.id %}
-        <form action="{% url 'health:user_control' 'login' %}" method="post">
-            {% csrf_token %}
-            User name: <input type="text" name="username">
-            Password: <input type="password" name="password">
-            <input type="submit" value="Login">
-        </form>
-        <a href="{% url 'health:user_control' 'register' %}">Signup</a>
+{#        <form action="{% url 'health:user_control' 'login' %}" method="post">#}
+{#            {% csrf_token %}#}
+{#            User name: <input type="text" name="username">#}
+{#            Password: <input type="password" name="password">#}
+{#            <input type="submit" value="Login">#}
+{#        </form>#}
+{#        <a href="{% url 'health:user_control' 'register' %}">Signup</a>#}
     {% else %}
-        <h6><a href="{% url 'health:operations' 'modify_info'%}">{{ log_user.username }}</a></h6>
-        <a href="{% url 'health:operations' 'messages' %}">Messages</a>
-        <form action="{% url 'health:user_control' 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
+{#        <h6><a href="{% url 'health:operations' 'modify_info'%}">{{ log_user.username }}</a></h6>#}
+{#        <a href="{% url 'health:operations' 'messages' %}">Messages</a>#}
+{#        <form action="{% url 'health:user_control' 'logout' %}" method="post">#}
+{#            {% csrf_token %}#}
+{#            <button type="submit">Logout</button>#}
+{#        </form>#}
     {% endif %}
 </div>
 
@@ -31,7 +151,14 @@
 </div>
 
 <div id="bottom-part">
-    <a href="{% url 'health:homepage' %}">Welcome</a>
+{#    <a href="{% url 'health:homepage' %}">Welcome</a>#}
 </div>
 </body>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('li.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+    });
+{#    console.log({{ identity }});#}
+</script>
 </html>

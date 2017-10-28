@@ -81,6 +81,66 @@ class WelcomeView(BaseMixin, TemplateView):
         return context
 
 
+# URL name = 'healthdata'
+class HealthDataView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(HealthDataView, self).get_context_data(**kwargs)
+        # user_id = self.kwargs.get('user_id')
+        context['self'] = True
+
+        return context
+
+    @method_decorator(login_required)
+    def get(self, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        page_owner = self.kwargs.get('user_id')
+        # # page_owner = User.objects.get(pk=user_id)
+        # # context['page_owner'] = page_owner
+        # # context['self'] = True
+        context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        # # context['tasks'] = Task.objects.filter(user=context['page_owner'])
+        #
+        # return render(self.request, 'health/health_data.html', context)
+        return render(self.request, 'health/health_data.html', context)
+
+
+# URL name = 'health_data_operations'
+class HealthDataOperationView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(HealthDataOperationView, self).get_context_data(**kwargs)
+
+        return context
+
+    @method_decorator(login_required)
+    def post(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        context = self.get_context_data()
+
+        if slug == 'create_health_data':
+            return self.create_health_data(context)
+        else:
+            raise Http404
+
+    def create_health_data(self, context):
+        form = HealthDataForm(self.request.POST)
+        if form.is_valid():
+            heart_rate = form.cleaned_data['heart_rate']
+            weight = form.cleaned_data['weight']
+            temperature = form.cleaned_data['temperature']
+            creator = context['log_user']
+
+            health_data = HealthData.objects.create(heart_rate=heart_rate, weight=weight, temperature=temperature,
+                                                    creator=creator)
+            try:
+                health_data.save()
+            except Exception:
+                return HttpResponseServerError()
+
+            return HttpResponseRedirect(reverse('health:healthdata_page', kwargs={'user_id': context['log_user'].id}))
+
+
+
 # URL name = 'homepage'
 class HomepageView(BaseMixin, View):
     def get_context_data(self, **kwargs):
@@ -193,22 +253,22 @@ class OperationView(BaseMixin, View):
 
         return HttpResponseRedirect(reverse('health:homepage'))
 
-    def create_health_data(self, context):
-        form = HealthDataForm(self.request.POST)
-        if form.is_valid():
-            heart_rate = form.cleaned_data['heart_rate']
-            weight = form.cleaned_data['weight']
-            temperature = form.cleaned_data['temperature']
-            creator = context['log_user']
-
-            health_data = HealthData.objects.create(heart_rate=heart_rate, weight=weight, temperature=temperature,
-                                                    creator=creator)
-            try:
-                health_data.save()
-            except Exception:
-                return HttpResponseServerError()
-
-        return HttpResponseRedirect(reverse('health:homepage'))
+    # def create_health_data(self, context):
+    #     form = HealthDataForm(self.request.POST)
+    #     if form.is_valid():
+    #         heart_rate = form.cleaned_data['heart_rate']
+    #         weight = form.cleaned_data['weight']
+    #         temperature = form.cleaned_data['temperature']
+    #         creator = context['log_user']
+    #
+    #         health_data = HealthData.objects.create(heart_rate=heart_rate, weight=weight, temperature=temperature,
+    #                                                 creator=creator)
+    #         try:
+    #             health_data.save()
+    #         except Exception:
+    #             return HttpResponseServerError()
+    #
+    #     return HttpResponseRedirect("/health/homepage/health_data_page")
 
     def create_doctor_account(self, context):
         if context['identity'] != '0':

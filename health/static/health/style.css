@@ -1,0 +1,232 @@
+body{
+    background: white url("images/WP.png");
+    padding-top: 70px;
+}
+
+.navbar-inverse .navbar-brand{
+    position: relative;
+    font-family: 'Carter One', cursive;
+    text-shadow: 1px 1px 2px black;
+    color: rgb(16, 74, 255);
+    font-size: x-large;
+}
+
+.navbar-inverse .navbar-brand[data-text]::after {
+    content: attr(data-text);
+    color: #4aff5a;
+    position: absolute;
+    left: 15.5px;
+    top: 15px;
+    z-index: 2;
+    -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#0117ff), to(rgba(0, 0, 255, 0)));
+}
+
+.navbar-inverse .navbar-brand:hover{
+    color: rgb(16, 74, 255);
+}
+
+.navbar{
+    border-radius: 0;
+    box-shadow: 0 4px 20px -5px black;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0, rgb(27, 108, 255) 50%, rgba(74, 255, 90, 0.8) 85%, rgb(203, 255, 211) 100%);
+    border-bottom: none;
+}
+
+#topNavBar li a {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    font-family: 'Baloo Bhaina', cursive;
+}
+
+.box {
+    padding: 0px 8px 0px 8px;
+}
+
+.panel{
+    margin-bottom: 16px;
+}
+
+.slogan{
+    position: relative;
+    font-family: 'Damion', cursive;
+    text-shadow: 1px 1px 2px #0b2860;
+    color: rgb(49, 143, 255);
+    left: 375px;
+    top: 7px;
+    font-size: x-large;
+}
+
+.slogan[data-text]::after {
+    content: attr(data-text);
+    color: #76ff6e;
+    position: absolute;
+    left: 0px;
+    top: 0;
+    z-index: 2;
+    -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#0117ff), to(rgba(0, 0, 255, 0)));
+}
+
+.panel-right .panel-title{
+    position: relative;
+    text-shadow: 1px 1px 2px #0e3176;
+    color: rgb(49, 143, 255);
+}
+
+.panel-right .panel-title[data-text]::after {
+    content: attr(data-text);
+    color: rgba(118, 255, 110, 0.84);
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#0117ff), to(rgba(0, 0, 255, 0)));
+}
+
+.panel-left .panel-title{
+    position: relative;
+    text-shadow: 1px 1px 2px #960e3e;
+    color: rgb(255, 35, 232);
+}
+
+.panel-left .panel-title[data-text]::after {
+    content: attr(data-text);
+    color: rgba(255, 218, 10, 0.84);
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#0117ff), to(rgba(0, 0, 255, 0)));
+}
+
+.panel-last .panel-title{
+    position: relative;
+    text-shadow: 1px 1px 1px rgba(55, 115, 51, 0.71);
+    color: rgb(51, 255, 221);
+    font-size: small;
+}
+
+.panel-last .panel-title[data-text]::after {
+    content: attr(data-text);
+    color: #ffffff;
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#0117ff), to(rgba(0, 0, 255, 0)));
+}
+
+#topNavBar li a:after {
+    display: block;
+    position: absolute;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: '.';
+    color: transparent;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+#topNavBar li a:hover:after {
+    -webkit-animation: circle 1.2s ease-in forwards;
+}
+
+@-webkit-keyframes circle {
+    0% {
+        width: 1px;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        height: 1px;
+        z-index: -1;
+        background: #333333;
+        border-radius: 100%;
+    }
+    100% {
+        background: #0c0c0c;
+        height: 5000%;
+        width: 5000%;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-radius: 0;
+    }
+}
+
+.panel-heading{
+    border-bottom: none;
+}
+
+.panel-left .panel-heading{
+    background-image: radial-gradient(farthest-corner at 0px 45px , rgb(255, 103, 31) 0%, #ff1e7c 70%, #790da9 100%);
+}
+
+.panel-right .panel-heading{
+    background-image: radial-gradient(farthest-corner at 0px 45px , rgb(121, 13, 169) 0%, #1b6cff 70%, #4bff77 100%);
+}
+
+.panel-last .panel-heading{
+    background-image: radial-gradient(farthest-corner at 0px 45px , rgb(10, 255, 12) 0%, #bfffd3 100%);
+}
+
+.panel-title{
+    font-family: 'Carter One', cursive;
+}
+
+.panel{
+    border: none;
+    box-shadow: 0 4px 20px -5px black;
+}
+
+.panel-login>.panel-body{
+    background: white url("images/loginbgg.jpg") no-repeat center center;
+    background-size: cover;
+    height:400px;
+}
+
+input{
+    background-color: #ffffff;
+    border: none;
+}
+
+.login-form{
+    color: rgb(0, 0, 0);
+    /*text-shadow: 0px 0px 1px rgba(28, 106, 255, 0.88);*/
+}
+
+.navbar-inverse .navbar-nav>li>a>.ssolutionn , .panel-title{
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 1px rgba(32, 32, 32, 0.93);
+}
+
+.navbar-inverse .navbar-nav>li>a>.ssolutionn:hover{
+    color: rgb(255, 255, 255);
+    text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.88);
+}
+
+.btn{
+    background-image: radial-gradient(farthest-corner at 0px 70px , #ff1896 0%, #1b6cff 100%);
+    border: none;
+}
+
+.btn:hover{
+    background-image: radial-gradient(farthest-corner at 0px 70px , #d61481 0%, #1862e7 100%);
+    border: none;
+}
+
+#settt , .dropdown-menu>li>a{
+    color: #114098;
+    text-shadow: none;
+}
+
+#settt:hover, .dropdown-menu>li>a:hover{
+    color: #1c6aff;
+    text-shadow: none;
+}

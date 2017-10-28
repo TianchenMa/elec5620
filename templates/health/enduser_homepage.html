@@ -1,15 +1,293 @@
 {% extends 'health/base.html' %}
-
+{% block title %}DASHBOARD{% endblock %}
 {% block content %}
-    <h3>EndUser {{ page_owner.username }}'s homepage</h3>
-    {% if doctor == None and self %}
-        <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Select Doctor</button>
-        </form>
-    {% else %}
-        <h5>--Doctor: {{ doctor.username }}--</h5>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 box">
+                <div class="panel panel-left">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="FIVE DAYS HEALTH DATA">FIVE DAYS HEALTH DATA&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if health_datas %}
+                            <table class="table table-striped table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>HEART RATE</th>
+                                        <th>WEIGHT</th>
+                                        <th>TEMPERATURE</th>
+{#                                        <th>NOTE</th>#}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for health_data in health_datas %}
+{#                                    {% for hdata in all_hdata %}#}
+                                        {% if forloop.counter < 6%}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ health_data.heart_rate }}</td>
+                                                <td>{{ health_data.weight }}</td>
+                                                <td>{{ health_data.temperature }}</td>
+{#                                                <td>{{ hdata.note }}</td>#}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <form action="{% url 'health:healthdata_page' page_owner.id%}">
+{#                                {% csrf_token %}#}
+                                <button class="btn btn-success col-md-offset-3 col-md-5">MORE / RECORD</button>
+                            </form>
+                        {% else %}
+                            <h3>You don't have any data</h3>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel panel-left">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="DOCTOR RECOMMENDATION TASK">DOCTOR RECOMMENDATION TASK&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if tasks %}
+                            <table class="table table-striped table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>CONTENT</th>
+                                        <th>TIME</th>
+                                        {% if not self %}
+                                            <th>DELETE</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for task in tasks %}
+                                        {% if forloop.counter < 3%}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ task.content}}</td>
+                                                <td>{{ task.send_date }}</td>
+                                                <td>
+                                                    {% if not self %}
+                                                        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="task_id" value="{{ task.id }}"/>
+                                                            <button type="submit">Delete</button>
+                                                        </form>
+                                                    {% endif %}
+                                                </td>
+{#                                                <td>{{ hdata.note }}</td>#}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <h3>You don't have any data</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 box">
+                <div class="panel panel-right">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="TRACK HEALTH DATA">TRACK HEALTH DATA&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if health_datas %}
+                            <canvas id="myChart" width="400" height="200"></canvas>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel panel-right">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="HEALTH STATUS">HEALTH STATUS&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if messages %}
+                            <table class="table table-striped table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>CONTENT</th>
+                                        <th>TIME</th>
+                                        {% if not self %}
+                                            <th>DELETE</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for message in messages %}
+                                        <li>
+                                        From: {{ message.from_user.username }}<br>
+                                        Date: {{ message.send_date }}<br>
+                                        Content:<br>{{ message.content }}<br>
+                                        </li>
+                                    {% endfor %}
+                                    {% for task in tasks %}
+                                        {% if forloop.counter < 3%}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ task.content}}</td>
+                                                <td>{{ task.send_date }}</td>
+                                                <td>
+                                                    {% if not self %}
+                                                        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="task_id" value="{{ task.id }}"/>
+                                                            <button type="submit">Delete</button>
+                                                        </form>
+                                                    {% endif %}
+                                                </td>
+{#                                                <td>{{ hdata.note }}</td>#}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <h3>You don't have any data</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if self %}
+                <div class="col-sm-12 col-md-2 box">
+                    <div class="panel panel-last">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"data-text="YOUR DOCTOR">YOUR DOCTOR&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if doctor == None and self %}
+                                <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">Select Doctor</button>
+                                </form>
+                            {% else %}
+                                <div> ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Doctor: {{ doctor.username }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;★</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="panel panel-last">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"data-text="NOTIFICATION">NOTIFICATION&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if unviewed_announcements %}
+                                <table class="table table-striped table-hover " style="table-layout: fixed">
+                                    <tbody>
+                                        {% for new in unviewed_announcements %}
+                                            <tr>
+                                                <td style="overflow: hidden;">{{ new.content }}</td>
+                                                <td style="width: 70px;overflow: hidden;">{{ new.send_date }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="panel panel-last">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"data-text="ACTIVITY">ACTIVITY&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if activities %}
+                                <table class="table table-striped table-hover " style="table-layout: fixed">
+                                    <tbody>
+                                        {% for activity in activities %}
+                                            <tr>
+                                                <td style="width: 70px;overflow: hidden;">{{ activity.title }}</td>
+    {#                                            <td style="width: 70px;overflow: hidden;">{{ activity.content }}</td>#}
+                                                <td style="overflow: hidden;">{{ activity.activity_time }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+<script type="text/javascript">
+var heart_rate=[];
+var weight=[];
+var temperature=[];
+{% for health_data in health_datas %}
+    {% if forloop.counter < 7%}
+        heart_rate[{{ forloop.counter }}-1]={{ health_data.heart_rate }}
+        weight[{{ forloop.counter }}-1]={{ health_data.weight }}
+        temperature[{{ forloop.counter }}-1]={{ health_data.temperature }}
     {% endif %}
+{% endfor %}
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ["1", "2", "3", "4", "5", "6"],
+        datasets: [{
+            label: '# HEART RATE',
+            data: heart_rate,
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        },{
+            label: '# WEIGHT',
+            data: weight,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)'
+            ],
+            borderWidth: 1
+        },{
+            label: '# TEMPERATURE',
+            data: temperature,
+            backgroundColor: [
+                'rgba(173, 45, 216,0.2)'
+            ],
+            borderColor: [
+                'rgba(173, 45, 216,1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
+
+
+
+{#    <h3>EndUser {{ page_owner.username }}'s homepage</h3>#}
+{#    {% if doctor == None and self %}#}
+{#        <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">#}
+{#            {% csrf_token %}#}
+{#            <button type="submit">Select Doctor</button>#}
+{#        </form>#}
+{#    {% else %}#}
+{#        <h5>--Doctor: {{ doctor.username }}--</h5>#}
+{#    {% endif %}#}
 
     <div id="activity">
     <h5>Activities:</h5>
@@ -55,26 +333,26 @@
         </form>
     </div>
 
-    <h5>Health data:</h5>
-    <ul>
-    {% for health_data in health_datas %}
-        <li>
-        Heart rate: {{ health_data.heart_rate }}
-        Weight: {{ health_data.weight }}
-        Temperature: {{ health_data.temperature }}
-        </li>
-    {% endfor %}
-    </ul>
-    {% if self %}
-    <h5>Create health data:</h5>
-    <form action="{% url 'health:operations' 'create_health_data' %}" method="post">
-        {% csrf_token %}
-        Heart rate: <input type="text" name="heart_rate"/><br>
-        Weight: <input type="text" name="weight"/><br>
-        Temperature: <input type="text" name="temperature"/><br>
-        <input type="submit" name="Submit"/>
-    </form>
-    {% endif %}
+{#    <h5>Health data:</h5>#}
+{#    <ul>#}
+{#    {% for health_data in health_datas %}#}
+{#        <li>#}
+{#        Heart rate: {{ health_data.heart_rate }}#}
+{#        Weight: {{ health_data.weight }}#}
+{#        Temperature: {{ health_data.temperature }}#}
+{#        </li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+{#    {% if self %}#}
+{#    <h5>Create health data:</h5>#}
+{#    <form action="{% url 'health:operations' 'create_health_data' %}" method="post">#}
+{#        {% csrf_token %}#}
+{#        Heart rate: <input type="text" name="heart_rate"/><br>#}
+{#        Weight: <input type="text" name="weight"/><br>#}
+{#        Temperature: <input type="text" name="temperature"/><br>#}
+{#        <input type="submit" name="Submit"/>#}
+{#    </form>#}
+{#    {% endif %}#}
 
 
     <h5>Announcements:</h5>
