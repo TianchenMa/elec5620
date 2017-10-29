@@ -125,10 +125,17 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-12 col-md-2 box">
-                            <div class="second circle">
+                            <div class="second circle" style="margin-top: 10px">
                                 <strong></strong>
                             </div>
-                            {% if health_status %}
+                            {% if not self %}
+                                <br>
+                                <h5>update health score</h5>
+                                <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_status' %}" method="post">
+                                    {% csrf_token %}
+                                    <select class="1-100" name="score"></select>
+                                    <button type="submit">UPDATE</button>
+                                </form>
                             {% endif %}
                         </div>
                         <div class="col-sm-12 col-md-10 box" style="padding-left: 20px; max-height: 123px; overflow: scroll">
@@ -285,6 +292,13 @@
                     }
                 }]
             }
+        }
+    });
+
+    $(function(){
+        var $select = $(".1-100");
+        for (i=1;i<=60;i++){
+            $select.append($('<option></option>').val(i).html(i))
         }
     });
 </script>

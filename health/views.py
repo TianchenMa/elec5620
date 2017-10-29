@@ -545,6 +545,8 @@ class DoctorOperationView(BaseMixin, View):
             return self.create_task()
         elif slug == 'update_health_risk':
             return self.update_health_risk()
+        elif slug == 'update_health_status':
+            return self.update_health_status()
         elif slug == 'delete_task':
             return self.delete_task()
         else:
@@ -569,10 +571,13 @@ class DoctorOperationView(BaseMixin, View):
         patient_id = self.kwargs.get('user_id')
         User.objects.filter(pk=patient_id).update(health_risk=content)
 
-        # try:
-        #     task.save()
-        # except Exception:
-        #     pass
+        return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
+
+    def update_health_status(self):
+        context = self.get_context_data()
+        score = self.request.POST['score']
+        patient_id = self.kwargs.get('user_id')
+        User.objects.filter(pk=patient_id).update(health_status=score)
 
         return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
 
