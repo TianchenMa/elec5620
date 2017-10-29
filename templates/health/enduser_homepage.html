@@ -124,16 +124,27 @@
                         <h3 class="panel-title" data-text="HEALTH STATUS">HEALTH STATUS&nbsp;</h3>
                     </div>
                     <div class="panel-body">
-                        <div class="col-sm-12 col-md-3 box">
+                        <div class="col-sm-12 col-md-2 box">
                             <div class="second circle">
                                 <strong></strong>
                             </div>
                             {% if health_status %}
                             {% endif %}
                         </div>
-                        <div class="col-sm-12 col-md-9 box">
+                        <div class="col-sm-12 col-md-10 box" style="padding-left: 20px; max-height: 123px; overflow: scroll">
                             {% if health_risk %}
+                                YOU HEALTH RISK:
+                                <br>
                                 {{ health_risk }}
+                            {% endif %}
+                            {% if not self %}
+                                <br>
+                                <h5>update health risk</h5>
+                                <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_risk' %}" method="post">
+                                    {% csrf_token %}
+                                    Content:<input type="text" name="content"/>
+                                    <button type="submit">UPDATE</button>
+                                </form>
                             {% endif %}
                         </div>
                     </div>

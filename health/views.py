@@ -528,6 +528,8 @@ class DoctorOperationView(BaseMixin, View):
         context['self'] = False
         context['health_datas'] = HealthData.objects.filter(creator=page_owner)
         context['tasks'] = Task.objects.filter(user=context['page_owner'])
+        context['health_risk'] = page_owner.health_risk
+        context['health_status'] = page_owner.health_status
 
         return context
 
@@ -541,6 +543,8 @@ class DoctorOperationView(BaseMixin, View):
 
         if slug == 'create_task':
             return self.create_task()
+        elif slug == 'update_health_risk':
+            return self.update_health_risk()
         elif slug == 'delete_task':
             return self.delete_task()
         else:
@@ -555,6 +559,20 @@ class DoctorOperationView(BaseMixin, View):
             task.save()
         except Exception:
             pass
+
+        return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
+
+    def update_health_risk(self):
+        context = self.get_context_data()
+        content = self.request.POST['content']
+        # task = Task.objects.create(doctor=context['log_user'], user=context['page_owner'], content=content)
+        patient_id = self.kwargs.get('user_id')
+        User.objects.filter(pk=patient_id).update(health_risk=content)
+
+        # try:
+        #     task.save()
+        # except Exception:
+        #     pass
 
         return HttpResponseRedirect(reverse('health:patient_homepage', kwargs={'user_id': context['page_owner'].id}))
 
