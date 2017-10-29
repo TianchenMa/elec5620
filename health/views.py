@@ -36,6 +36,8 @@ def generate_doctor(username):
     doctor.username = username
     password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
     doctor.identity = '1'
+    doctor.health_status = 101
+    doctor.health_risk = '1'
     doctor.set_password(password)
 
     return doctor, password
@@ -63,6 +65,8 @@ class BaseMixin(ContextMixin):
             log_user = User.objects.get(pk=self.request.user.id)
             context['log_user'] = log_user
             context['identity'] = log_user.identity
+            context['health_risk'] = log_user.health_risk
+            context['health_status'] = log_user.health_status
         else:
             context['log_user'] = None
 
@@ -81,7 +85,31 @@ class WelcomeView(BaseMixin, TemplateView):
         return context
 
 
-# URL name = 'healthdata'
+# URL name = 'task_page'
+class TaskView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(TaskView, self).get_context_data(**kwargs)
+        # user_id = self.kwargs.get('user_id')
+        context['self'] = True
+
+        return context
+
+    @method_decorator(login_required)
+    def get(self, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        page_owner = self.kwargs.get('user_id')
+        # # page_owner = User.objects.get(pk=user_id)
+        # # context['page_owner'] = page_owner
+        # # context['self'] = True
+        # context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user_id=page_owner)
+        #
+        # return render(self.request, 'health/health_data.html', context)
+        return render(self.request, 'health/task.html', context)
+
+
+# URL name = 'healthdata_page'
 class HealthDataView(BaseMixin, View):
     def get_context_data(self, **kwargs):
         context = super(HealthDataView, self).get_context_data(**kwargs)
@@ -138,7 +166,6 @@ class HealthDataOperationView(BaseMixin, View):
                 return HttpResponseServerError()
 
             return HttpResponseRedirect(reverse('health:healthdata_page', kwargs={'user_id': context['log_user'].id}))
-
 
 
 # URL name = 'homepage'
@@ -447,7 +474,7 @@ class UserControlView(BaseMixin, View):
 
             if pwd == pwd_confirm:
                 if RegisterCode.objects.filter(code=code).exists():
-                    user = User.objects.create(username=username, identity='2')
+                    user = User.objects.create(username=username, identity='2', health_status=97, health_risk='no health risk')
                     user.set_password(pwd)
                     register_code = RegisterCode.objects.get(code=code)
                     register_code.used = True
@@ -485,6 +512,8 @@ class PatientHomepageView(BaseMixin, TemplateView):
         context['self'] = False
         context['health_datas'] = HealthData.objects.filter(creator=page_owner)
         context['tasks'] = Task.objects.filter(user=context['page_owner'])
+        context['health_risk'] = page_owner.health_risk
+        context['health_status'] = page_owner.health_status
 
         return context
 

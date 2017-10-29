@@ -9,7 +9,9 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Carter One">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Damion">
     <link rel="stylesheet" type="text/css" href="{% static 'health/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'health/circlestyle.css' %}"/>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.2/dist/circle-progress.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
 </head>
@@ -45,7 +47,7 @@
                         </li>
                     {% endif %}
                     <li class="">
-                        <a href="#">
+                        <a href="{% url 'health:task_page' request.user.id %}">
                             <div class="ssolutionn"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>&nbsp; TASK</div>
                         </a>
                     </li>

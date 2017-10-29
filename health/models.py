@@ -20,6 +20,8 @@ IDENTITY = (
 class User(AbstractUser):
     gender = models.CharField(max_length=1, default='0', choices=GENDER)
     identity = models.CharField(max_length=1, default='0', choices=IDENTITY)
+    health_status = models.IntegerField(default=0)
+    health_risk = models.CharField(max_length=100, default=' ')
     unread = models.IntegerField(default=0)
     doctor = models.ForeignKey(
         'self',
