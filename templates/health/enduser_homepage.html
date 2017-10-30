@@ -3,29 +3,125 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <!--COL-ONE-->
-            <div class="col-sm-12 col-md-4 box">
-                <!--HEALTHDATA-->
-                <div class="panel panel-left">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" data-text="FIVE DAYS HEALTH DATA">FIVE DAYS HEALTH DATA&nbsp;</h3>
+            <!--COL-ONE-for-self-->
+            {% if self %}
+                <div class="col-sm-12 col-md-4 box">
+                    <!--HEALTHDATA-->
+                    <div class="panel panel-left">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="FIVE DAYS HEALTH DATA">FIVE DAYS HEALTH DATA&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if health_datas %}
+                                <table class="table table-striped table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>HEART RATE</th>
+                                        <th>WEIGHT</th>
+                                        <th>TEMPERATURE</th>
+                                        {#                                        <th>NOTE</th>#}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for health_data in health_datas %}
+                                        {#                                    {% for hdata in all_hdata %}#}
+                                        {% if forloop.counter < 6 %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ health_data.heart_rate }}</td>
+                                                <td>{{ health_data.weight }}</td>
+                                                <td>{{ health_data.temperature }}</td>
+                                                {#                                                <td>{{ hdata.note }}</td>#}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <form action="{% url 'health:healthdata_page' page_owner.id %}">
+                                    {#                                {% csrf_token %}#}
+                                    <button class="btn btn-success col-md-offset-3 col-md-5">MORE / RECORD</button>
+                                </form>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        {% if health_datas %}
-                            <table class="table table-striped table-hover ">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>HEART RATE</th>
-                                    <th>WEIGHT</th>
-                                    <th>TEMPERATURE</th>
-                                    {#                                        <th>NOTE</th>#}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for health_data in health_datas %}
-                                    {#                                    {% for hdata in all_hdata %}#}
-                                    {% if forloop.counter < 6 %}
+                    <!--TASK-->
+                    <div class="panel panel-left">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="DOCTOR RECOMMENDATION TASK">DOCTOR RECOMMENDATION
+                                TASK&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if tasks %}
+                                <table class="table table-striped table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>CONTENT</th>
+                                        <th>TIME</th>
+                                        {% if not self %}
+                                            <th>DELETE</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for task in tasks %}
+                                        {% if forloop.counter < 4 %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ task.content }}</td>
+                                                <td>{{ task.send_date }}</td>
+                                                <td>
+                                                    {% if not self %}
+                                                        <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}"
+                                                              method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="task_id" value="{{ task.id }}"/>
+                                                            <button type="submit">Delete</button>
+                                                        </form>
+                                                    {% endif %}
+                                                </td>
+                                                {#                                                <td>{{ hdata.note }}</td>#}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <form action="{% url 'health:task_page' page_owner.id %}">
+                                    {#                                {% csrf_token %}#}
+                                    <button class="btn btn-success col-md-offset-3 col-md-5">MORE</button>
+                                </form>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!--COL-ONE-for-doctor-->
+            {% else %}
+                <div class="col-sm-12 col-md-6 box">
+                    <!--HEALTHDATA-->
+                    <div class="panel panel-left">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="HEALTH DATA OF CLIENT: {{ page_owner }}"> HEALTH DATA OF
+                                CLIENT: {{ page_owner }}&nbsp;</h3>
+                        </div>
+                        <div class="panel-body" style="max-height: 275px; overflow: scroll">
+                            {% if health_datas %}
+                                <table class="table table-striped table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>HEART RATE</th>
+                                        <th>WEIGHT</th>
+                                        <th>TEMPERATURE</th>
+                                        {#                                        <th>NOTE</th>#}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for health_data in health_datas %}
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
                                             <td>{{ health_data.heart_rate }}</td>
@@ -33,41 +129,35 @@
                                             <td>{{ health_data.temperature }}</td>
                                             {#                                                <td>{{ hdata.note }}</td>#}
                                         </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <form action="{% url 'health:healthdata_page' page_owner.id %}">
-                                {#                                {% csrf_token %}#}
-                                <button class="btn btn-success col-md-offset-3 col-md-5">MORE / RECORD</button>
-                            </form>
-                        {% else %}
-                            <h3>You don't have any data</h3>
-                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                <!--TASK-->
-                <div class="panel panel-left">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" data-text="DOCTOR RECOMMENDATION TASK">DOCTOR RECOMMENDATION
-                            TASK&nbsp;</h3>
-                    </div>
-                    <div class="panel-body">
-                        {% if tasks %}
-                            <table class="table table-striped table-hover ">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>CONTENT</th>
-                                    <th>TIME</th>
-                                    {% if not self %}
-                                        <th>DELETE</th>
-                                    {% endif %}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for task in tasks %}
-                                    {% if forloop.counter < 4 %}
+                    <!--TASK-->
+                    <div class="panel panel-left">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="RECOMMENDATION TASKS OF CLIENT: {{ page_owner }}">
+                                RECOMMENDATION TASKS OF CLIENT: {{ page_owner }}&nbsp;</h3>
+                        </div>
+                        <div class="panel-body" style="max-height: 275px; overflow: scroll">
+                            {% if tasks %}
+                                <table class="table table-striped table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>CONTENT</th>
+                                        <th>TIME</th>
+                                        {% if not self %}
+                                            <th>DELETE</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for task in tasks %}
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
                                             <td>{{ task.content }}</td>
@@ -78,36 +168,44 @@
                                                           method="post">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="task_id" value="{{ task.id }}"/>
-                                                        <button type="submit">Delete</button>
+                                                        <button class="btn btn-success col-md-10"
+                                                                style="height: 25px; font-size: smaller" type="submit">
+                                                            DELETE
+                                                        </button>
                                                     </form>
                                                 {% endif %}
                                             </td>
                                             {#                                                <td>{{ hdata.note }}</td>#}
                                         </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <form action="{% url 'health:task_page' page_owner.id %}">
-                                {#                                {% csrf_token %}#}
-                                <button class="btn btn-success col-md-offset-3 col-md-5">MORE</button>
-                            </form>
-                        {% else %}
-                            <h3>You don't have any data</h3>
-                        {% endif %}
-                        {% if not self %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <h3>You don't have any data</h3>
+                            {% endif %}
                             <br>
-                            <h5>Create Task</h5>
+                        </div>
+                    </div>
+                    <div class="panel panel-left">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="PROVIDE NEW
+                                RECOMMENDATION TASK">PROVIDE NEW
+                                RECOMMENDATION TASK&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
                             <form action="{% url 'health:doctor_operations' page_owner.id 'create_task' %}"
                                   method="post">
                                 {% csrf_token %}
-                                Task content:<input type="text" name="content"/>
-                                <button type="submit">Create</button>
+                                <strong>CONTENT : </strong> <textarea class="form-control" rows="5"
+                                                                      name="content"></textarea>
+                                <br>
+                                <button class="btn btn-success col-md-2 col-md-offset-10 " type="submit">PROVIDE
+                                </button>
                             </form>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             <!--COL-TWO-->
             <div class="col-sm-12 col-md-6 box">
                 <!--CHART-->
@@ -131,38 +229,46 @@
                             <div class="second circle" style="margin-top: 10px">
                                 <strong></strong>
                             </div>
-                            {% if not self %}
-                                <br>
-                                <h5>update health score</h5>
-                                <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_status' %}"
-                                      method="post">
-                                    {% csrf_token %}
-                                    <select class="healthStatus" name="score"></select>
-                                    <button type="submit">UPDATE</button>
-                                </form>
-                            {% endif %}
                         </div>
                         <div class="col-sm-12 col-md-10 box" style="padding-left: 20px;">
                             {% if health_risk %}
-                                <strong>YOU HEALTH RISK:</strong>
+                                <strong>HEALTH RISK:</strong>
                                 <br>
                                 <div style="max-height: 103px; overflow: scroll">
                                     {{ health_risk }}
                                 </div>
                             {% endif %}
-                            {% if not self %}
-                                <br>
-                                <h5>update health risk</h5>
-                                <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_risk' %}"
-                                      method="post">
-                                    {% csrf_token %}
-                                    Content:<input type="text" name="content"/>
-                                    <button type="submit">UPDATE</button>
-                                </form>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% if not self %}
+                    <div class="panel panel-right">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" data-text="UPDATE HEALTH RISK">UPDATE HEALTH RISK&nbsp;</h3>
+                        </div>
+                        <div class="panel-body">
+                            <strong>UPDATE HEALTH SCORE:</strong>
+                            <br>
+                            <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_status' %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <select class="healthStatus" name="score"></select>
+                                <button class="btn btn-success col-md-2 col-md-offset-10 " type="submit">UPDATE
+                                </button>
+                            </form>
+                            <br>
+                            <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_risk' %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <strong>CONTENT : </strong><textarea class="form-control" rows="5"
+                                                                     name="content"></textarea>
+                                <br>
+                                <button class="btn btn-success col-md-2 col-md-offset-10 " type="submit">UPDATE
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <!--COL-THREE-->
             {% if self %}

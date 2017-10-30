@@ -8,12 +8,12 @@
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="ALL ANNOUNCEMENTS">ALL ANNOUNCEMENTS&nbsp;</h3>
                     </div>
-                    <div class="panel-body" style="max-height: 500px; overflow: scroll">
+                    <div class="panel-body" style="max-height: 508px; overflow: scroll">
                         {% for announcement in announcements %}
-                            CONTENT: <br>{{ announcement.content }}<br><br>
+                            <strong>CONTENT :</strong> <br>{{ announcement.content }}<br><br>
                             <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
-                                <div class="col-md-6 " style="padding: 0px">Publish
-                                    date: {{ announcement.send_date }}</div>
+                                <div class="col-md-6 " style="padding: 0px"><strong>PUBLISH DATE
+                                    :</strong>{{ announcement.send_date }}</div>
                                 {% csrf_token %}
                                 <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
                                 <button class="btn btn-success col-md-2 col-md-offset-3 "
@@ -33,10 +33,10 @@
                     <div class="panel-body">
                         <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
                             {% csrf_token %}
-                            CONTENT: <textarea class="form-control" rows="5" name="content"></textarea>
+                            <strong>CONTENT :</strong>
+                            <textarea class="form-control" rows="5" name="content"></textarea>
                             <br>
-                            <button class="btn btn-success col-md-2 col-md-offset-10 "
-                                    style="height: 25px; font-size: smaller" type="submit">PUBLISH
+                            <button class="btn btn-success col-md-2 col-md-offset-10 " type="submit">PUBLISH
                             </button>
                         </form>
                     </div>
@@ -111,7 +111,7 @@
                             <br>
                             <div class="col-md-offset-3 col-md-9 login-form">
                                 <div>Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"
-                                                                                                         name="title"/>
+                                                                                       name="title"/>
                                 </div>
                                 <br>
                                 <div>Content: <input type="text" name="content"/></div>
@@ -131,11 +131,11 @@
             {#                    </div>#}
             {#                    <div class="panel-body">#}
             {#                        <ul>#}
-            {#                            {% for patient in patients %}#}
-            {#                                <li>Patient: <a#}
-            {#                                        href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>#}
-            {#                                </li>#}
-            {#                            {% endfor %}#}
+            {#                                        {% for patient in patients %}#}
+            {#                                            <li>Patient: <a#}
+            {#                                                    href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>#}
+            {#                                            </li>#}
+            {#                                        {% endfor %}#}
             {#                        </ul>#}
             {#                    </div>#}
             {#                </div>#}

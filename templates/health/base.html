@@ -34,18 +34,17 @@
         <div class="collapse navbar-collapse" id="topNavBar">
             {% if request.user.id %}
                 <ul class="nav navbar-nav">
-                    <li class="">
+                    <li class="sssss">
                         <a href="{% url 'health:homepage' %}">
                             <div class="ssolutionn"><span class="glyphicon glyphicon-dashboard"
-                                                          aria-hidden="true"></span>&nbsp DASHBOARD
+                                                          aria-hidden="true"></span>&nbsp;
+                                DASHBOARD
                             </div>
                         </a>
                     </li>
-                    <script>
-                        console.log({{ identity }});
-                    </script>
+
                     {% if  not identity  == '1' %}
-                        <li>
+                        <li class="sssss">
                             <a href="{% url 'health:healthdata_page' request.user.id %}">
                                 <div class="ssolutionn"><span class="glyphicon glyphicon-plus"
                                                               aria-hidden="true"></span>&nbsp HEALTH DATA
@@ -53,14 +52,39 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class="">
-                        <a href="{% url 'health:task_page' request.user.id %}">
-                            <div class="ssolutionn"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>&nbsp;
-                                TASK
-                            </div>
-                        </a>
-                    </li>
-                    <li class="">
+
+                    {% if  not identity  == '1' %}
+                        <li class="sssss">
+                            <a href="{% url 'health:task_page' request.user.id %}">
+                                <div class="ssolutionn"><span class="glyphicon glyphicon-tasks"
+                                                              aria-hidden="true"></span>&nbsp;
+                                    TASK
+                                </div>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if identity  == '1' %}
+                        <li class="dropdown sssss">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                               role="button" aria-expanded="true">
+                                <div class="ssolutionn"><span class="glyphicon glyphicon-folder-open"
+                                                              aria-hidden="true"></span>&nbsp;&nbsp;
+                                    CLIENTS&nbsp;
+                                    <span
+                                            class="caret"></span></div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                {% for patient in patients %}
+                                    <li>
+                                        <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    <li class="sssss">
                         <a href="{% url 'health:calendar_page' request.user.id %}">
                             <div class="ssolutionn"><span class="glyphicon glyphicon-calendar"
                                                           aria-hidden="true"></span>&nbsp; CALENDAR
@@ -74,7 +98,7 @@
                 </ul>
             {% endif %}
             <ul class="nav navbar-nav navbar-right">
-                <li class="">
+                <li class="dropdown">
                     {% if request.user.id %}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
                             <div class="ssolutionn" id="settt"><span class="glyphicon glyphicon-user"
@@ -123,6 +147,9 @@
     {% if not request.user.id %}
         <div class="row">
             <div class="col-sm-12 col-md-offset-2 col-md-8">
+                <br>
+                <br>
+                <br>
                 <div class="panel panel-right panel-login">
                     <div class="panel-heading">
                         {#                        style="text-align: center"#}
@@ -185,8 +212,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('li.active').removeClass('active');
-        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li.sssss').addClass('active');
     });
-    {#    console.log({{ identity }});#}
 </script>
 </html>
