@@ -31,67 +31,70 @@
             <a class="navbar-brand" href="{% url 'health:homepage' %}" data-text="HC AIDE">HC AIDE&nbsp;</a>
         </div>
 
+
         <div class="collapse navbar-collapse" id="topNavBar">
             {% if request.user.id %}
-                <ul class="nav navbar-nav">
-                    <li class="sssss">
-                        <a href="{% url 'health:homepage' %}">
-                            <div class="ssolutionn"><span class="glyphicon glyphicon-dashboard"
-                                                          aria-hidden="true"></span>&nbsp;
-                                DASHBOARD
-                            </div>
-                        </a>
-                    </li>
-
-                    {% if  not identity  == '1' %}
+                {% if not identity == "0" %}
+                    <ul class="nav navbar-nav">
                         <li class="sssss">
-                            <a href="{% url 'health:healthdata_page' request.user.id %}">
-                                <div class="ssolutionn"><span class="glyphicon glyphicon-plus"
-                                                              aria-hidden="true"></span>&nbsp HEALTH DATA
-                                </div>
-                            </a>
-                        </li>
-                    {% endif %}
-
-                    {% if  not identity  == '1' %}
-                        <li class="sssss">
-                            <a href="{% url 'health:task_page' request.user.id %}">
-                                <div class="ssolutionn"><span class="glyphicon glyphicon-tasks"
+                            <a href="{% url 'health:homepage' %}">
+                                <div class="ssolutionn"><span class="glyphicon glyphicon-dashboard"
                                                               aria-hidden="true"></span>&nbsp;
-                                    TASK
+                                    DASHBOARD
                                 </div>
                             </a>
                         </li>
-                    {% endif %}
 
-                    {% if identity  == '1' %}
-                        <li class="dropdown sssss">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                               role="button" aria-expanded="true">
-                                <div class="ssolutionn"><span class="glyphicon glyphicon-folder-open"
-                                                              aria-hidden="true"></span>&nbsp;&nbsp;
-                                    CLIENTS&nbsp;
-                                    <span
-                                            class="caret"></span></div>
+                        {% if  not identity  == '1' %}
+                            <li class="sssss">
+                                <a href="{% url 'health:healthdata_page' request.user.id %}">
+                                    <div class="ssolutionn"><span class="glyphicon glyphicon-plus"
+                                                                  aria-hidden="true"></span>&nbsp HEALTH DATA
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if  not identity  == '1' %}
+                            <li class="sssss">
+                                <a href="{% url 'health:task_page' request.user.id %}">
+                                    <div class="ssolutionn"><span class="glyphicon glyphicon-tasks"
+                                                                  aria-hidden="true"></span>&nbsp;
+                                        TASK
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if identity  == '1' %}
+                            <li class="dropdown sssss">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                   role="button" aria-expanded="true">
+                                    <div class="ssolutionn"><span class="glyphicon glyphicon-folder-open"
+                                                                  aria-hidden="true"></span>&nbsp;&nbsp;
+                                        CLIENTS&nbsp;
+                                        <span
+                                                class="caret"></span></div>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    {% for patient in patients %}
+                                        <li>
+                                            <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <li class="sssss">
+                            <a href="{% url 'health:calendar_page' request.user.id %}">
+                                <div class="ssolutionn"><span class="glyphicon glyphicon-calendar"
+                                                              aria-hidden="true"></span>&nbsp; CALENDAR
+                                </div>
                             </a>
-                            <ul class="dropdown-menu" role="menu">
-                                {% for patient in patients %}
-                                    <li>
-                                        <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
                         </li>
-                    {% endif %}
-
-                    <li class="sssss">
-                        <a href="{% url 'health:calendar_page' request.user.id %}">
-                            <div class="ssolutionn"><span class="glyphicon glyphicon-calendar"
-                                                          aria-hidden="true"></span>&nbsp; CALENDAR
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                    </ul>
+                {% endif %}
             {% else %}
                 <ul class="nav navbar-nav slogan" data-text="★ Your Personal Health Carer ★">
                     ★ Your Personal Health Carer ★ &nbsp;
