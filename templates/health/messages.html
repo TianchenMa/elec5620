@@ -1,13 +1,38 @@
 {% extends 'health/base.html' %}
 
 {% block content %}
-<ul>
-{% for message in messages %}
-    <li>
-    From: {{ message.from_user.username }}<br>
-    Date: {{ message.send_date }}<br>
-    Content:<br>{{ message.content }}<br>
-    </li>
-{% endfor %}
-</ul>
+       <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6 col-md-offset-3">
+        <div class="panel panel-right ">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-text="Tech Team {{ log_user.username }}'s homepage">Tech Team {{ log_user.username }}'s homepage&nbsp;</h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <h4>Notificatons</h4>
+                    <hr>
+                    {% for message in messages %}
+                        <li>
+                        From: {{ message.from_user.username }}<br>
+                        Date: {{ message.send_date }}<br>
+                        Content:<br>{{ message.content }}<br>
+                        <br>
+                        <hr>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{#<ul>#}
+{#{% for message in messages %}#}
+{#    <li>#}
+{#    From: {{ message.from_user.username }}<br>#}
+{#    Date: {{ message.send_date }}<br>#}
+{#    Content:<br>{{ message.content }}<br>#}
+{#    </li>#}
+{#{% endfor %}#}
+{#</ul>#}
 {% endblock %}

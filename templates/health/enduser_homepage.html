@@ -176,7 +176,7 @@
                             {% if doctor == None and self %}
                                 <form action="{% url 'health:operations' 'choose_doctor' %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit">Select Doctor</button>
+                                    <button class="btn btn-success type="submit">Select Doctor</button>
                                 </form>
                             {% else %}
                                 <div>

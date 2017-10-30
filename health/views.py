@@ -336,7 +336,7 @@ class OperationView(BaseMixin, View):
             return HttpResponseServerError()
 
         message = Message.objects.create(from_user=context['log_user'], to_user=context['log_user'])
-        message.content = 'Doctor username: ' + doctor_name + '<br>' + 'Password: ' + password
+        message.content = 'Doctor username: ' + doctor_name + '  /  ' + 'Password: ' + password
 
         try:
             message.save()
@@ -460,6 +460,9 @@ class UserControlView(BaseMixin, View):
 
         if slug == 'register':
             return render(self.request, 'health/register.html')
+
+        if slug == 'login':
+            return render(self.request, 'health/base.html')
 
     def post(self, *args, **kwargs):
         slug = self.kwargs.get('slug')
