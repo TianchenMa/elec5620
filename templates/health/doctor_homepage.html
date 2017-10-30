@@ -1,59 +1,90 @@
 {% extends 'health/base.html' %}
 
 {% block content %}
-    <h3>Doctor {{ user.username }}'s Homepage</h3>
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-xs-6 col-sm-4"style="height: 280px">
+        <div class="panel panel-right">
+            <div class="panel-heading">
+                <span>Doctor {{ user.username }}'s Homepage</span>
+            </div>
+            <div class="panel-body">
+                <span>Activities:</span>
+                <ul>
+                    {% for activity in activities %}
+                        <li>
+                            Time: {{ activity.activity_time }}<br>
+                            Title: {{ activity.title }}<br>
+                            Content: {{ activity.content }}<br>
+                        </li>
 
-    <div id="activity">
-        <h5>Activities:</h5>
-        <ul>
-            {% for activity in activities %}
-                <li>
-                    Time: {{ activity.activity_time }}<br>
-                    Title: {{ activity.title }}<br>
-                    Content: {{ activity.content }}<br>
-                </li>
-
-                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
-                    <button type="submit">Delete</button>
-                </form>
-            {% endfor %}
-        </ul>
-        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
-            {% csrf_token %}
-            Datetime: <input type="datetime-local" name="time"><br>
-            Title: <input type="text" name="title"><br>
-            Content: <input type="text" name="content"><br>
-            <button type="submit">Create</button>
-        </form>
-    </div>
-
-    <h5>Announcements</h5>
-    <ul>
-        {% for announcement in announcements %}
-            <li>
-                Announcement: {{ announcement.content }}<br>
-                Publish date: {{ announcement.send_date }}<br>
-            </li>
-            <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
+                        <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                            <button type="submit">Delete</button>
+                        </form>
+                    {% endfor %}
+                </ul>
+                <form action="{% url 'health:operations' 'create_activity' %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
-                <button type="submit">Delete</button>
-            </form>
-        {% endfor %}
-    </ul>
-
-    <h6>Publish Announcement</h6>
-    <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
-        {% csrf_token %}
-        Content: <input type="text" name="content">
-        <button type="submit">Publish</button>
-    </form>
-    <h5>Patient List</h5>
-    <ul>
-        {% for patient in patients %}
-            <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
-        {% endfor %}
-    </ul>
+                    Datetime: <input type="datetime-local" name="time"><br>
+                    Title: <input type="text" name="title"><br>
+                    Content: <input type="text" name="content"><br>
+                    <button type="submit">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-4" style="height: 280px">
+    <div class="panel panel-right">
+         <div class="panel-heading">
+               <span>Announcements</span>
+         </div>
+         <div class="panel-body">
+             <ul>
+                 {% for announcement in announcements %}
+                     <li>
+                         Announcement: {{ announcement.content }}<br>
+                         Publish date: {{ announcement.send_date }}<br>
+                     </li>
+                     <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
+                         {% csrf_token %}
+                         <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
+                         <button type="submit">Delete</button>
+                     </form>
+                 {% endfor %}
+             </ul>
+         </div>
+         </div>
+    </div>
+    <div class="col-xs-6 col-sm-4" style="height: 280px">
+    <div class="panel panel-right">
+         <div class="panel-heading">
+             <span>Publish Announcement</span>
+         </div>
+         <div class="panel-body">
+             <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
+                 {% csrf_token %}
+                 Content: <textarea class="form-control" rows="10" name="content"></textarea>
+                 <button type="submit">Publish</button>
+             </form>
+         </div>
+    </div>
+    </div>
+    <div class="col-xs-6 col-sm-4" style="height: 280px">
+    <div class="panel panel-right">
+         <div class="panel-heading">
+             <h5>Patient List</h5>
+         </div>
+        <div class="panel-body">
+            <ul>
+                {% for patient in patients %}
+                    <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
 {% endblock %}
