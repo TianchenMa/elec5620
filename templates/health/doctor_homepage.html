@@ -1,59 +1,145 @@
 {% extends 'health/base.html' %}
 
 {% block content %}
-    <h3>Doctor {{ user.username }}'s Homepage</h3>
-
-    <div id="activity">
-        <h5>Activities:</h5>
-        <ul>
-            {% for activity in activities %}
-                <li>
-                    Time: {{ activity.activity_time }}<br>
-                    Title: {{ activity.title }}<br>
-                    Content: {{ activity.content }}<br>
-                </li>
-
-                <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
-                    <button type="submit">Delete</button>
-                </form>
-            {% endfor %}
-        </ul>
-        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
-            {% csrf_token %}
-            Datetime: <input type="datetime-local" name="time"><br>
-            Title: <input type="text" name="title"><br>
-            Content: <input type="text" name="content"><br>
-            <button type="submit">Create</button>
-        </form>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 box">
+                <div class="panel panel-left">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="ALL ANNOUNCEMENTS">ALL ANNOUNCEMENTS&nbsp;</h3>
+                    </div>
+                    <div class="panel-body" style="max-height: 500px; overflow: scroll">
+                        {% for announcement in announcements %}
+                            CONTENT: <br>{{ announcement.content }}<br><br>
+                            <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
+                                <div class="col-md-6 " style="padding: 0px">Publish
+                                    date: {{ announcement.send_date }}</div>
+                                {% csrf_token %}
+                                <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
+                                <button class="btn btn-success col-md-2 col-md-offset-3 "
+                                        style="height: 25px; font-size: smaller" type="submit">DELETE
+                                </button>
+                            </form>
+                            <br>
+                            <br>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="panel panel-left">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="PUBLISH NEW ANNOUNCEMENTS">PUBLISH NEW
+                            ANNOUNCEMENTS&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
+                            {% csrf_token %}
+                            CONTENT: <textarea class="form-control" rows="5" name="content"></textarea>
+                            <br>
+                            <button class="btn btn-success col-md-2 col-md-offset-10 "
+                                    style="height: 25px; font-size: smaller" type="submit">PUBLISH
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 box">
+                <div class="panel panel-right">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="ACTIVITIES">ACTIVITIES&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if activities %}
+                            <table class="table table-striped table-hover " style="table-layout: fixed">
+                                <thead>
+                                <tr>
+                                    <th>TITLE</th>
+                                    <th>CONTENT</th>
+                                    <th>TIME</th>
+                                    <th>DELETE</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for activity in activities %}
+                                    {% if forloop.counter < 7 %}
+                                        <tr>
+                                            <td>
+                                                <div style="height: 20px; overflow:hidden;">{{ activity.title }}</div>
+                                            </td>
+                                            <td>
+                                                <div style="height: 20px; overflow:hidden;">{{ activity.content }}</div>
+                                            </td>
+                                            <td style="width: 70px;overflow: hidden;">
+                                                <div style="height: 20px; overflow:hidden;">{{ activity.activity_time }}</div>
+                                            </td>
+                                            <td>
+                                                <form action="{% url 'health:operations' 'delete_activity' %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                                                    <button class="btn btn-success col-md-6"
+                                                            style="height: 25px; font-size: smaller" type="submit">
+                                                        DELETE
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {#                            <form action="{% url 'health:calendar_page' page_owner.id %}">#}
+                            {#                                  {% csrf_token %}#}
+                            {#                                <button class="btn btn-success col-md-offset-3 col-md-6"#}
+                            {#                                        style="height: 28px; font-size: small">MORE#}
+                            {#                                </button>#}
+                            {#                            </form>#}
+                        {% else %}
+                            <h3>You don't have any data</h3>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel panel-right panel-login">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-text="ADD NEW ACTIVITY">ADD NEW ACTIVITY&nbsp;</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
+                            {% csrf_token %}
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="col-md-offset-3 col-md-9 login-form">
+                                <div>Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"
+                                                                                                         name="title"/>
+                                </div>
+                                <br>
+                                <div>Content: <input type="text" name="content"/></div>
+                                <br>
+                                <div>Time: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="datetime-local" name="time"></div>
+                                <br>
+                                <button class="btn btn-success col-md-offset-2 col-md-3">CREATE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {#            <div class="col-xs-6 col-sm-4" style="height: 280px">#}
+            {#                <div class="panel panel-right">#}
+            {#                    <div class="panel-heading">#}
+            {#                        <h5>Patient List</h5>#}
+            {#                    </div>#}
+            {#                    <div class="panel-body">#}
+            {#                        <ul>#}
+            {#                            {% for patient in patients %}#}
+            {#                                <li>Patient: <a#}
+            {#                                        href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a>#}
+            {#                                </li>#}
+            {#                            {% endfor %}#}
+            {#                        </ul>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+        </div>
     </div>
-
-    <h5>Announcements</h5>
-    <ul>
-        {% for announcement in announcements %}
-            <li>
-                Announcement: {{ announcement.content }}<br>
-                Publish date: {{ announcement.send_date }}<br>
-            </li>
-            <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
-                <button type="submit">Delete</button>
-            </form>
-        {% endfor %}
-    </ul>
-
-    <h6>Publish Announcement</h6>
-    <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
-        {% csrf_token %}
-        Content: <input type="text" name="content">
-        <button type="submit">Publish</button>
-    </form>
-    <h5>Patient List</h5>
-    <ul>
-        {% for patient in patients %}
-            <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
-        {% endfor %}
-    </ul>
 {% endblock %}
