@@ -1,28 +1,75 @@
 {% extends 'health/base.html' %}
 {% block content %}
-    <h4>Tech Team {{ log_user.username }}'s homepage</h4>
-    <ul>
-    <h5>Available codes</h5>
-        {% for code in codes %}
-            <li>Code: {{ code.code }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6 col-md-offset-3">
+        <div class="panel panel-right ">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-text="Tech Team {{ log_user.username }}'s homepage">Tech Team {{ log_user.username }}'s homepage&nbsp;</h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <h4>Available codes</h4>
+                    {% for code in codes %}
+                        <li>Code: {{ code.code }}</li>
+                    {% endfor %}
+                    <br>
+                    <form action="{% url 'health:operations' 'create_code' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Create Code</button>
+                    </form>
+                </ul>
+            </div>
+            <hr>
+            <div class="panel-body">
 
-    <form action="{% url 'health:operations' 'create_code' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Create Code</button>
-    </form>
+                    <h4>Doctors</h4>
+                <ul>
+                    {% for doctor in doctors %}
+                        <li>Doctor: {{ doctor.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-    <h5>Doctors</h5>
-    <ul>
-        {% for doctor in doctors %}
-            <li>Doctor: {{ doctor.username }}</li>
-        {% endfor %}
-    </ul>
+            <div class="panel-body">
+                <ul>
+                    <form action="{% url 'health:operations' 'create_doctor_account' %}" method="post">
+                    {% csrf_token %}
 
-    <form action="{% url 'health:operations' 'create_doctor_account' %}" method="post">
-        {% csrf_token %}
-        Doctor name: <input type="text" name="doctor_name">
-        <button type="submit">Create doctor account</button>
-    </form>
+                        <h4>Doctor name:<h4></h4> <input class="form-control" type="text" name="doctor_name">
+                        <br>
+
+                        <button class="btn btn-primary" type="submit">Create doctor account</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#    <h4>Tech Team {{ log_user.username }}'s homepage</h4>#}
+{#    <ul>#}
+{#    <h5>Available codes</h5>#}
+{#        {% for code in codes %}#}
+{#            <li>Code: {{ code.code }}</li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{##}
+{#    <form action="{% url 'health:operations' 'create_code' %}" method="post">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit">Create Code</button>#}
+{#    </form>#}
+{##}
+{#    <h5>Doctors</h5>#}
+{#    <ul>#}
+{#        {% for doctor in doctors %}#}
+{#            <li>Doctor: {{ doctor.username }}</li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{##}
+{#    <form action="{% url 'health:operations' 'create_doctor_account' %}" method="post">#}
+{#        {% csrf_token %}#}
+{#        Doctor name: <input type="text" name="doctor_name">#}
+{#        <button type="submit">Create doctor account</button>#}
+{#    </form>#}
 {% endblock %}
