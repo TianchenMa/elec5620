@@ -9,6 +9,22 @@
             </div>
         </div>
     </div>
+    {% for activity in activities %}
+        <li>
+            Time: {{ activity.activity_time }}<br>
+            Title: {{ activity.title }}<br>
+            Content: {{ activity.content }}<br>
+        </li>
+        {% if self %}
+            <form action="{% url 'health:operations' 'delete_activity' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+                <button type="submit">Delete</button>
+            </form>
+        {% endif %}
+    {% endfor %}
+
+
     <script type="text/javascript">
         !function () {
             var today = moment();

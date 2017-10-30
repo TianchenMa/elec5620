@@ -103,7 +103,7 @@ class CalendarView(BaseMixin, View):
         # # context['page_owner'] = page_owner
         # # context['self'] = True
         # context['health_datas'] = HealthData.objects.filter(creator=page_owner)
-        context['tasks'] = Task.objects.filter(user_id=page_owner)
+        context['activities'] = Activity.objects.filter(user_id=page_owner)
         #
         # return render(self.request, 'health/health_data.html', context)
         return render(self.request, 'health/calendar.html', context)
