@@ -85,6 +85,30 @@ class WelcomeView(BaseMixin, TemplateView):
         return context
 
 
+# URL name = 'calendar_page'
+class CalendarView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(CalendarView, self).get_context_data(**kwargs)
+        # user_id = self.kwargs.get('user_id')
+        context['self'] = True
+
+        return context
+
+    @method_decorator(login_required)
+    def get(self, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        page_owner = self.kwargs.get('user_id')
+        # # page_owner = User.objects.get(pk=user_id)
+        # # context['page_owner'] = page_owner
+        # # context['self'] = True
+        # context['health_datas'] = HealthData.objects.filter(creator=page_owner)
+        context['tasks'] = Task.objects.filter(user_id=page_owner)
+        #
+        # return render(self.request, 'health/health_data.html', context)
+        return render(self.request, 'health/calendar.html', context)
+
+
 # URL name = 'task_page'
 class TaskView(BaseMixin, View):
     def get_context_data(self, **kwargs):
@@ -206,8 +230,10 @@ class HomepageView(BaseMixin, View):
 
     def enduser_homepage(self, context):
         context['page_owner'] = context['log_user']
-        unviewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=False)
-        viewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'], announcementreceive__viewed=True)
+        unviewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'],
+                                                             announcementreceive__viewed=False)
+        viewed_announcements = Announcement.objects.filter(announcementreceive__enduser=context['log_user'],
+                                                           announcementreceive__viewed=True)
         now = datetime.datetime.now().strftime(TIME_FORMAT)
         context['activities'] = Activity.objects.filter(user=context['log_user'], activity_time__gt=now)
         context['past_activities'] = Activity.objects.filter(user=context['log_user'], activity_time__lt=now)
@@ -405,7 +431,8 @@ class OperationView(BaseMixin, View):
             title = activity_form.cleaned_data['title']
             content = activity_form.cleaned_data['content']
 
-            activity = Activity.objects.create(title=title, content=content, user=context['log_user'], activity_time=activity_time)
+            activity = Activity.objects.create(title=title, content=content, user=context['log_user'],
+                                               activity_time=activity_time)
 
             try:
                 activity.save()
@@ -474,7 +501,8 @@ class UserControlView(BaseMixin, View):
 
             if pwd == pwd_confirm:
                 if RegisterCode.objects.filter(code=code).exists():
-                    user = User.objects.create(username=username, identity='2', health_status=97, health_risk='no health risk')
+                    user = User.objects.create(username=username, identity='2', health_status=97,
+                                               health_risk='no health risk')
                     user.set_password(pwd)
                     register_code = RegisterCode.objects.get(code=code)
                     register_code.used = True

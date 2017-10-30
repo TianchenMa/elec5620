@@ -37,7 +37,7 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
-                            <form action="{% url 'health:healthdata_page' page_owner.id%}">
+                            <form action="{% url 'health:healthdata_page' page_owner.id %}">
 {#                                {% csrf_token %}#}
                                 <button class="btn btn-success col-md-offset-3 col-md-5">MORE / RECORD</button>
                             </form>
@@ -86,7 +86,7 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
-                            <form action="{% url 'health:healthdata_page' page_owner.id%}">
+                            <form action="{% url 'health:task_page' page_owner.id%}">
 {#                                {% csrf_token %}#}
                                 <button class="btn btn-success col-md-offset-3 col-md-5">MORE</button>
                             </form>
@@ -118,7 +118,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <!--HEALTHSTATUS-->
+                <!--HEALTH STATUS-->
                 <div class="panel panel-right">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="HEALTH STATUS">HEALTH STATUS&nbsp;</h3>
@@ -133,16 +133,18 @@
                                 <h5>update health score</h5>
                                 <form action="{% url 'health:doctor_operations' page_owner.id 'update_health_status' %}" method="post">
                                     {% csrf_token %}
-                                    <select class="1-100" name="score"></select>
+                                    <select class="healthStatus" name="score"></select>
                                     <button type="submit">UPDATE</button>
                                 </form>
                             {% endif %}
                         </div>
-                        <div class="col-sm-12 col-md-10 box" style="padding-left: 20px; max-height: 123px; overflow: scroll">
+                        <div class="col-sm-12 col-md-10 box" style="padding-left: 20px;">
                             {% if health_risk %}
-                                YOU HEALTH RISK:
+                                <strong>YOU HEALTH RISK:</strong>
                                 <br>
-                                {{ health_risk }}
+                                <div style="max-height: 103px; overflow: scroll">
+                                    {{ health_risk }}
+                                </div>
                             {% endif %}
                             {% if not self %}
                                 <br>
@@ -298,8 +300,8 @@
     });
 
     $(function(){
-        var $select = $(".1-100");
-        for (i=1;i<=100;i++){
+        var $select = $(".healthStatus");
+        for (var i=1;i<=100;i++){
             $select.append($('<option></option>').val(i).html(i))
         }
     });

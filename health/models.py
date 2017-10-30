@@ -2,12 +2,10 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
-
 GENDER = (
     ('0', u'Male'),
     ('1', u'Female')
 )
-
 
 IDENTITY = (
     ('0', u'TechTeam'),

@@ -12,25 +12,25 @@
                         {% if health_datas %}
                             <table class="table table-striped table-hover ">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>HEART RATE</th>
-                                        <th>WEIGHT</th>
-                                        <th>TEMPERATURE</th>
-                                        <th>NOTE</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>HEART RATE</th>
+                                    <th>WEIGHT</th>
+                                    <th>TEMPERATURE</th>
+                                    <th>NOTE</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {% for health_data in health_datas %}
-{#                                    {% for hdata in all_hdata %}#}
-                                        <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>{{ health_data.heart_rate }}</td>
-                                            <td>{{ health_data.weight }}</td>
-                                            <td>{{ health_data.temperature }}</td>
-                                            <td>PENDING</td>
-                                        </tr>
-                                    {% endfor %}
+                                {% for health_data in health_datas %}
+                                    {#                                    {% for hdata in all_hdata %}#}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ health_data.heart_rate }}</td>
+                                        <td>{{ health_data.weight }}</td>
+                                        <td>{{ health_data.temperature }}</td>
+                                        <td>PENDING</td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         {% else %}
@@ -45,16 +45,22 @@
                         <h3 class="panel-title" data-text="RECORD NEW HEALTH DATA">RECORD NEW HEALTH DATA&nbsp;</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}" method="post">
+                        <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}"
+                              method="post">
                             {% csrf_token %}
                             <br>
                             <br>
                             <br>
                             <br>
                             <div class="col-md-offset-2 col-md-9 login-form">
-                                <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="weight"/></div><br>
-                                <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/></div><br>
-                                <div>Temperature: <input type="text" name="temperature"/></div><br>
+                                <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"
+                                                                                                          name="weight"/>
+                                </div>
+                                <br>
+                                <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/></div>
+                                <br>
+                                <div>Temperature: <input type="text" name="temperature"/></div>
+                                <br>
                                 <button class="btn btn-success col-md-offset-1 col-md-7">RECORD</button>
                             </div>
                         </form>

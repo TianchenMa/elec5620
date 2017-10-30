@@ -4,7 +4,7 @@
     <h3>Doctor {{ user.username }}'s Homepage</h3>
 
     <div id="activity">
-    <h5>Activities:</h5>
+        <h5>Activities:</h5>
         <ul>
             {% for activity in activities %}
                 <li>
@@ -20,40 +20,40 @@
                 </form>
             {% endfor %}
         </ul>
-    <form action="{% url 'health:operations' 'create_activity' %}" method="post">
-        {% csrf_token %}
-        Datetime: <input type="datetime-local" name="time"><br>
-        Title: <input type="text" name="title"><br>
-        Content: <input type="text" name="content"><br>
-        <button type="submit">Create</button>
-    </form>
+        <form action="{% url 'health:operations' 'create_activity' %}" method="post">
+            {% csrf_token %}
+            Datetime: <input type="datetime-local" name="time"><br>
+            Title: <input type="text" name="title"><br>
+            Content: <input type="text" name="content"><br>
+            <button type="submit">Create</button>
+        </form>
     </div>
 
     <h5>Announcements</h5>
     <ul>
-    {% for announcement in announcements %}
-        <li>
-            Announcement: {{ announcement.content }}<br>
-            Publish date: {{ announcement.send_date }}<br>
-        </li>
-        <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
-        {% csrf_token %}
-            <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
-            <button type="submit">Delete</button>
-        </form>
-    {% endfor %}
+        {% for announcement in announcements %}
+            <li>
+                Announcement: {{ announcement.content }}<br>
+                Publish date: {{ announcement.send_date }}<br>
+            </li>
+            <form action="{% url 'health:operations' 'delete_announcement' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="announcement_id" value="{{ announcement.id }}"/>
+                <button type="submit">Delete</button>
+            </form>
+        {% endfor %}
     </ul>
 
     <h6>Publish Announcement</h6>
-    <form action="{% url 'health:operations' 'publish_announcement'%}" method="post">
+    <form action="{% url 'health:operations' 'publish_announcement' %}" method="post">
         {% csrf_token %}
         Content: <input type="text" name="content">
         <button type="submit">Publish</button>
     </form>
     <h5>Patient List</h5>
     <ul>
-    {% for patient in patients %}
-        <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
-    {% endfor %}
+        {% for patient in patients %}
+            <li>Patient: <a href="{% url 'health:patient_homepage' patient.id %}">{{ patient.username }}</a></li>
+        {% endfor %}
     </ul>
 {% endblock %}

@@ -15,6 +15,8 @@ urlpatterns = [
 
     url(r'^task/(?P<user_id>[0-9]+)/$', TaskView.as_view(), name='task_page'),
 
+    url(r'^calendar/(?P<user_id>[0-9]+)/$', CalendarView.as_view(), name='calendar_page'),
+
     url(r'^user/(?P<slug>\w+)$', UserControlView.as_view(), name='user_control'),
 
     url(r'^(?P<user_id>[0-9]+)/$', PatientHomepageView.as_view(), name='patient_homepage'),

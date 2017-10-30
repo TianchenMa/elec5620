@@ -12,33 +12,34 @@
                         {% if tasks %}
                             <table class="table table-striped table-hover ">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>CONTENT</th>
-                                        <th>TIME</th>
-                                        {% if not self %}
-                                            <th>DELETE</th>
-                                        {% endif %}
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>CONTENT</th>
+                                    <th>TIME</th>
+                                    {% if not self %}
+                                        <th>DELETE</th>
+                                    {% endif %}
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {% for task in tasks %}
-                                        <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>{{ task.content}}</td>
-                                            <td>{{ task.send_date }}</td>
-                                            <td>
-                                                {% if not self %}
-                                                    <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}" method="post">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="task_id" value="{{ task.id }}"/>
-                                                        <button type="submit">Delete</button>
-                                                    </form>
-                                                {% endif %}
-                                            </td>
-{#                                                <td>{{ hdata.note }}</td>#}
-                                        </tr>
-                                    {% endfor %}
+                                {% for task in tasks %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ task.content }}</td>
+                                        <td>{{ task.send_date }}</td>
+                                        <td>
+                                            {% if not self %}
+                                                <form action="{% url 'health:doctor_operations' page_owner.id 'delete_task' %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="task_id" value="{{ task.id }}"/>
+                                                    <button type="submit">Delete</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                        {#                                                <td>{{ hdata.note }}</td>#}
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         {% else %}
@@ -53,16 +54,22 @@
                         <h3 class="panel-title" data-text="PROVIDE RECOMMENDATION TASK">PROVIDE RECOMMENDATION TASK&nbsp;</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}" method="post">
+                        <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}"
+                              method="post">
                             {% csrf_token %}
                             <br>
                             <br>
                             <br>
                             <br>
                             <div class="col-md-offset-2 col-md-9 login-form">
-                                <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="weight"/></div><br>
-                                <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/></div><br>
-                                <div>Temperature: <input type="text" name="temperature"/></div><br>
+                                <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"
+                                                                                                          name="weight"/>
+                                </div>
+                                <br>
+                                <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/></div>
+                                <br>
+                                <div>Temperature: <input type="text" name="temperature"/></div>
+                                <br>
                                 <button class="btn btn-success col-md-offset-1 col-md-7">CREATE</button>
                             </div>
                         </form>
