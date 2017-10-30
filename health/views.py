@@ -133,6 +133,40 @@ class TaskView(BaseMixin, View):
         return render(self.request, 'health/task.html', context)
 
 
+# URL name ='emergencycenter_page'
+class EmergencyCenterView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(EmergencyCenterView, self).get_context_data(**kwargs)
+        context['self'] = True
+
+        return context
+
+    @method_decorator(login_required)
+    def get(self, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        page_owner = self.kwargs.get('user_id')
+
+        return render(self.request, 'health/emergencycenter.html', context)
+
+     # URL name='Emergency_Center_Operations'
+class EmergencyCenterOperationView(BaseMixin, View):
+     def get_context_data(self, **kwargs):
+         context = super(EmergencyCenterOperationView, self).get_context_data(**kwargs)
+
+         return context
+
+    # @method_decorator(login_required)
+    # def get(self, *args, **kwargs):
+    #     slug = self.kwargs.get('slug')
+    #     context = self.get_context_data()
+    #
+    #     if slug == 'create_emergency_center':
+    #         context['create_emergency_center'] = Message.objects.filter(to_user=context['log_user'])
+    #         return render(self.request, 'health/messages.html', context)
+    #     else:
+    #         raise Http404
+
 # URL name = 'healthdata_page'
 class HealthDataView(BaseMixin, View):
     def get_context_data(self, **kwargs):

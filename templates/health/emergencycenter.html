@@ -1,0 +1,46 @@
+{% extends 'health/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-xs-6 col-sm-4">
+        <div class="panel panel-right">
+            <div class="panel-heading">
+                Conntect to Your Doctor
+            </div>
+            <div class="panel-body">
+                <form action="{% url 'health:emergencycenter_operations' request.user.id 'create_emergency_center' %}"
+                              method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="sr-only" for="name">Emergrncy Message</label>
+                        <input type="text" class="form-control" id="name" placeholder="please enter your message">
+                        <br>
+                        <button type="submit" class="btn btn-default">submit</button>
+                    </div>.
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+        <div class="panel panel-right">
+            <div class="panel-heading">
+                Conntect to Technical Team
+            </div>
+            <div class="panel-body">
+                <form action="{% url 'health:emergencycenter_operations' request.user.id 'messages' %}"
+                              method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="sr-only" for="name">Emergrncy Message</label>
+                        <input type="text" class="form-control" id="name" placeholder="please enter your message">
+                        <br>
+                        <button type="submit" class="btn btn-default">submit</button>
+                    </div>.
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

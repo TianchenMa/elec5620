@@ -20,5 +20,8 @@ urlpatterns = [
     url(r'^user/(?P<slug>\w+)$', UserControlView.as_view(), name='user_control'),
 
     url(r'^(?P<user_id>[0-9]+)/$', PatientHomepageView.as_view(), name='patient_homepage'),
-    url(r'^(?P<user_id>[0-9]+)/(?P<slug>\w+)$', DoctorOperationView.as_view(), name='doctor_operations')
+    url(r'^(?P<user_id>[0-9]+)/(?P<slug>\w+)$', DoctorOperationView.as_view(), name='doctor_operations'),
+
+    url(r'^emergencycenter/(?P<user_id>[0-9]+)/$', EmergencyCenterView.as_view(), name='emergencycenter_page'),
+    url(r'^emergencycenter/(?P<user_id>[0-9]+)/(?P<slug>\w+)/$',  EmergencyCenterOperationView.as_view(), name='emergencycenter_operations'),
 ]
