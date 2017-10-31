@@ -109,6 +109,62 @@ class CalendarView(BaseMixin, View):
         return render(self.request, 'health/calendar.html', context)
 
 
+# URL name = 'calendar_operations'
+class CalendarOperationView(BaseMixin, View):
+    def get_context_data(self, **kwargs):
+        context = super(CalendarOperationView, self).get_context_data(**kwargs)
+
+        return context
+
+    @method_decorator(login_required)
+    def post(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        context = self.get_context_data()
+
+        if slug == 'create_activity':
+            return self.create_activity(context)
+        elif slug == 'delete_activity':
+            return self.delete_activity(context)
+        else:
+            raise Http404
+
+    def create_activity(self, context):
+        context = self.get_context_data()
+        now = datetime.datetime.now()
+        activity_time = self.request.POST['time']
+        activity_time = datetime.datetime.strptime(activity_time, TIME_FORMAT)
+        if activity_time < now:
+            return HttpResponseRedirect(reverse('health:homepage'))
+
+        activity_form = ActivityForm(self.request.POST)
+
+        if activity_form.is_valid():
+            title = activity_form.cleaned_data['title']
+            content = activity_form.cleaned_data['content']
+
+            activity = Activity.objects.create(title=title, content=content, user=context['log_user'],
+                                               activity_time=activity_time)
+
+            try:
+                activity.save()
+            except Exception:
+                pass
+
+        return HttpResponseRedirect(reverse('health:calendar_page', kwargs={'user_id': context['log_user'].id}))
+
+    def delete_activity(self, context):
+        activity_id = self.request.POST['activity_id']
+        activity = Activity.objects.get(pk=activity_id)
+        context = self.get_context_data()
+
+        try:
+            activity.delete()
+        except Exception:
+            pass
+
+        return HttpResponseRedirect(reverse('health:calendar_page', kwargs={'user_id': context['log_user'].id}))
+
+
 # URL name = 'task_page'
 class TaskView(BaseMixin, View):
     def get_context_data(self, **kwargs):
@@ -306,23 +362,6 @@ class OperationView(BaseMixin, View):
 
         return HttpResponseRedirect(reverse('health:homepage'))
 
-    # def create_health_data(self, context):
-    #     form = HealthDataForm(self.request.POST)
-    #     if form.is_valid():
-    #         heart_rate = form.cleaned_data['heart_rate']
-    #         weight = form.cleaned_data['weight']
-    #         temperature = form.cleaned_data['temperature']
-    #         creator = context['log_user']
-    #
-    #         health_data = HealthData.objects.create(heart_rate=heart_rate, weight=weight, temperature=temperature,
-    #                                                 creator=creator)
-    #         try:
-    #             health_data.save()
-    #         except Exception:
-    #             return HttpResponseServerError()
-    #
-    #     return HttpResponseRedirect("/health/homepage/health_data_page")
-
     def create_doctor_account(self, context):
         if context['identity'] != '0':
             return PermissionDenied
@@ -439,18 +478,21 @@ class OperationView(BaseMixin, View):
             except Exception:
                 pass
 
-        return HttpResponseRedirect(reverse('health:homepage'))
+        return HttpResponseRedirect(reverse('health:calendar', kwargs={'user_id': context['log_user'].id}))
+        # return HttpResponseRedirect(reverse('health:homepage'))
 
     def delete_activity(self):
         activity_id = self.request.POST['activity_id']
         activity = Activity.objects.get(pk=activity_id)
+        context = self.get_context_data()
 
         try:
             activity.delete()
         except Exception:
             pass
 
-        return HttpResponseRedirect(reverse('health:homepage'))
+            return render(self.request, 'health/calendar.html.html')
+            # return HttpResponseRedirect(reverse('health:homepage'))
 
 
 # URL name = 'user_control'
