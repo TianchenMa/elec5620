@@ -545,6 +545,7 @@ class PatientHomepageView(BaseMixin, TemplateView):
         context['tasks'] = Task.objects.filter(user=context['page_owner'])
         context['health_risk'] = page_owner.health_risk
         context['health_status'] = page_owner.health_status
+        context['patients'] = User.objects.filter(identity='2', doctor=context['log_user'])
 
         return context
 

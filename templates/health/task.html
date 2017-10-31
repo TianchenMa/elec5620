@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 col-md-7">
+            <div class="col-sm-12 col-md-8 col-md-offset-2">
                 <div class="panel panel-left">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-text="ALL RECOMMENDATION TASK">ALL RECOMMENDATION TASK&nbsp;</h3>
@@ -49,36 +49,36 @@
                 </div>
             </div>
 {#            {% if not self %}#}
-                <div class="col-sm-12 col-md-5">
-                    <div class="panel panel-right panel-login">
-                        <div class="panel-heading">
-                            <h3 class="panel-title" data-text="PROVIDE RECOMMENDATION TASK">PROVIDE RECOMMENDATION TASK&nbsp;</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <div class="col-md-offset-2 col-md-9 login-form">
-                                    <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input
-                                            type="text"
-                                            name="weight"/>
-                                    </div>
-                                    <br>
-                                    <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/>
-                                    </div>
-                                    <br>
-                                    <div>Temperature: <input type="text" name="temperature"/></div>
-                                    <br>
-                                    <button class="btn btn-success col-md-offset-1 col-md-7">CREATE</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+{#                <div class="col-sm-12 col-md-5">#}
+{#                    <div class="panel panel-right panel-login">#}
+{#                        <div class="panel-heading">#}
+{#                            <h3 class="panel-title" data-text="PROVIDE RECOMMENDATION TASK">PROVIDE RECOMMENDATION TASK&nbsp;</h3>#}
+{#                        </div>#}
+{#                        <div class="panel-body">#}
+{#                            <form action="{% url 'health:healthdata_operations' request.user.id 'create_health_data' %}"#}
+{#                                  method="post">#}
+{#                                {% csrf_token %}#}
+{#                                <br>#}
+{#                                <br>#}
+{#                                <br>#}
+{#                                <br>#}
+{#                                <div class="col-md-offset-2 col-md-9 login-form">#}
+{#                                    <div>Weight:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input#}
+{#                                            type="text"#}
+{#                                            name="weight"/>#}
+{#                                    </div>#}
+{#                                    <br>#}
+{#                                    <div>Heart rate: &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="heart_rate"/>#}
+{#                                    </div>#}
+{#                                    <br>#}
+{#                                    <div>Temperature: <input type="text" name="temperature"/></div>#}
+{#                                    <br>#}
+{#                                    <button class="btn btn-success col-md-offset-1 col-md-7">CREATE</button>#}
+{#                                </div>#}
+{#                            </form>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
 {#            {% endif %}#}
         </div>
     </div>
